@@ -1,4 +1,4 @@
-import Versions from './components/Versions'
+import { Navigate } from 'react-router-dom'
 import electronLogo from './assets/electron.svg'
 
 function App(): JSX.Element {
@@ -9,7 +9,8 @@ function App(): JSX.Element {
       <img alt="logo" className="logo" src={electronLogo} />
       <div className="creator">Powered by electron-vite</div>
       <div className="text">
-        Build an Electron app with <span className="react">React</span>
+        Build an Electron app with
+        <span className="react">React</span>
         &nbsp;and <span className="ts">TypeScript</span>
       </div>
       <p className="tip">
@@ -27,7 +28,10 @@ function App(): JSX.Element {
           </a>
         </div>
       </div>
-      <Versions></Versions>
+      <div className="action">
+        <Navigate to={'main'}></Navigate>
+      </div>
+      {/* <Versions></Versions> */}
     </>
   )
 }
