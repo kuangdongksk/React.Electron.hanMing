@@ -1,5 +1,7 @@
 import G6 from '@antv/g6'
+import { 图事件名称 } from '@renderer/types/图'
 import { useEffect, useRef } from 'react'
+import './index.less'
 const data = {
   // 点集
   nodes: [
@@ -22,6 +24,21 @@ const data = {
     }
   ]
 }
+
+const 图事件列表: { 事件名称: 图事件名称; 回调函数: (事件对象) => void }[] = [
+  {
+    事件名称: 'node:click',
+    回调函数: (事件对象) => {
+      console.log('节点被点击了', 事件对象)
+    }
+  },
+  {
+    事件名称: 'edge:click',
+    回调函数: (事件对象) => {
+      console.log('边被点击了', 事件对象)
+    }
+  }
+]
 const Main = () => {
   const 翰冥元素 = useRef(null)
 
@@ -30,9 +47,8 @@ const Main = () => {
   useEffect(() => {
     if (!图) {
       图 = new G6.Graph({
-        container: 翰冥元素.current!, // String | HTMLElement，必须，在 Step 1 中创建的容器 id 或容器本身
-        width: 800, // Number，必须，图的宽度
-        height: 500 // Number，必须，图的高度
+        container: 翰冥元素.current!,
+        fitView: true
       })
     }
 
@@ -41,9 +57,9 @@ const Main = () => {
   }, [data])
 
   return (
-    <div>
+    <div className="main">
       这是主页
-      <div ref={翰冥元素} />
+      <div className="图" ref={翰冥元素} />
     </div>
   )
 }

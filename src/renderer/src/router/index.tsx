@@ -1,5 +1,5 @@
 import App from '@renderer/App'
-import Main from '@renderer/pages/main/Main'
+import Main from '@renderer/pages/main'
 import { createBrowserRouter } from 'react-router-dom'
 
 const router = createBrowserRouter([
