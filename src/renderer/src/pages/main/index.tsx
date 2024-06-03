@@ -1,6 +1,8 @@
-import G6 from '@antv/g6'
-import { 图事件名称 } from '@renderer/types/图'
-import { useEffect, useRef } from 'react'
+import G6, { Graph } from '@antv/g6'
+import { useEffect, useRef, useState } from 'react'
+import NoteForm from './components/Form'
+import 图配置 from './constant/config'
+import { 图事件列表 } from './constant/event'
 import './index.less'
 const data = {
   // 点集
@@ -25,41 +27,54 @@ const data = {
   ]
 }
 
-const 图事件列表: { 事件名称: 图事件名称; 回调函数: (事件对象) => void }[] = [
-  {
-    事件名称: 'node:click',
-    回调函数: (事件对象) => {
-      console.log('节点被点击了', 事件对象)
-    }
-  },
-  {
-    事件名称: 'edge:click',
-    回调函数: (事件对象) => {
-      console.log('边被点击了', 事件对象)
-    }
-  }
-]
 const Main = () => {
   const 翰冥元素 = useRef(null)
 
-  let 图
+  const [展示表单, 设置展示表单] = useState(false)
+
+  let 图: Graph
+
+  const bindEvents = () => {
+    图事件列表.forEach(({ eventName, callback, once }) => {
+      图.on(eventName, callback, once)
+    })
+    // 图.on('canvas:dblclick', () => {
+    //   if (展示表单) {
+    //     设置展示表单(false)
+    //   } else {
+    //     设置展示表单(true)
+    //   }
+    // })
+  }
 
   useEffect(() => {
     if (!图) {
       图 = new G6.Graph({
-        container: 翰冥元素.current!,
-        fitView: true
+        ...图配置,
+        container: 翰冥元素.current!
       })
     }
-
-    图.data(data) // 读取 Step 2 中的数据源到图上
+    图.data(data)
     图.render()
-  }, [data])
+    bindEvents()
+  }, [])
 
   return (
     <div className="main">
-      这是主页
-      <div className="图" ref={翰冥元素} />
+      <div className="图" ref={翰冥元素} onDoubleClick={() => 设置展示表单(!展示表单)}>
+        {展示表单 && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
+          >
+            <NoteForm />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

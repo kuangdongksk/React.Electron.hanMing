@@ -70,4 +70,28 @@ export type 边事件名称 =
   | 'edge:touchmove' //触摸屏幕滑动时触发
   | 'edge:touchend' //离开屏幕时触发
 
-export type 图事件名称 = 节点事件名称 | 边事件名称 | 通用事件名称
+export type Canvas事件名称 =
+  | 'canvas:click' //画布被点击时触发
+  | 'canvas:dblclick' //画布被双击时触发
+  | 'canvas:mouseenter' //鼠标移入画布范围内时触发
+  | 'canvas:mousemove' //鼠标在画布内部移动时触发
+  | 'canvas:mouseout' //鼠标移出画布后触发
+  | 'canvas:mouseover' //鼠标移入画布上方时触发
+  | 'canvas:mouseleave' //鼠标移出画布范围时触发
+  | 'canvas:mousedown' //鼠标按下画布时触发
+  | 'canvas:mouseup' //鼠标释放画布时触发
+  | 'canvas:contextmenu' //右击画布时触发
+  | 'canvas:dragstart' //拖拽画布开始时触发
+  | 'canvas:drag' //拖拽画布过程中触发
+  | 'canvas:dragend' //拖拽画布结束时触发
+  | 'canvas:dragenter' //拖拽画布进入目标画布时触发
+  | 'canvas:dragleave' //拖拽画布离开目标画布时触发
+  | 'canvas:drop' //拖拽画布在目标画布上放开时触发
+  | 'canvas:keydown' //按下键盘键时触发
+  | 'canvas:keyup' //释放键盘键时触发
+  | 'canvas:wheel' //滚轮滚动时触发
+  | 'canvas:touchstart' //触摸屏幕时触发
+  | 'canvas:touchmove' //触摸屏幕滑动时触发
+  | 'canvas:touchend' //离开屏幕时触发
+
+export type 图事件名称 = 节点事件名称 | 边事件名称 | 通用事件名称 | Canvas事件名称
