@@ -11,7 +11,7 @@
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
-    "s": "electron-vite preview",
+    "p": "electron-vite preview",
     "d": "electron-vite dev",
     "b": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
@@ -24,11 +24,13 @@
     "@antv/g6": "^4.8.24",
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
+    "@prisma/client": "^5.14.0",
+    "@prisma/extension-accelerate": "^1.1.0",
     "antd": "^5.17.3",
+    "antd-style": "^3.6.2",
     "dayjs": "^1.11.11",
     "electron-updater": "^6.1.7",
-    "react-router-dom": "^6.23.1",
-    "tailwind": "^4.0.0"
+    "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",

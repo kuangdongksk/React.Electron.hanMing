@@ -30,7 +30,7 @@ const data = {
 const Main = () => {
   const 翰冥元素 = useRef(null)
 
-  const [展示表单, 设置展示表单] = useState(false)
+  const [isShowForm, setIsShowForm] = useState(false)
 
   let 图: Graph
 
@@ -38,13 +38,9 @@ const Main = () => {
     图事件列表.forEach(({ eventName, callback, once }) => {
       图.on(eventName, callback, once)
     })
-    // 图.on('canvas:dblclick', () => {
-    //   if (展示表单) {
-    //     设置展示表单(false)
-    //   } else {
-    //     设置展示表单(true)
-    //   }
-    // })
+    图.on('canvas:dblclick', () => {
+      setIsShowForm(true)
+    })
   }
 
   useEffect(() => {
@@ -61,13 +57,14 @@ const Main = () => {
 
   return (
     <div className="main">
-      <div className="图" ref={翰冥元素} onDoubleClick={() => 设置展示表单(!展示表单)}>
-        {展示表单 && (
+      <div className="图" ref={翰冥元素}>
+        {isShowForm && (
           <div
             style={{
               position: 'absolute',
               top: '50%',
               left: '50%',
+              zIndex: 100,
               transform: 'translate(-50%, -50%)'
             }}
           >
