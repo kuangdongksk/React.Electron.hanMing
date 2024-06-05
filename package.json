@@ -26,6 +26,7 @@
     "@electron-toolkit/utils": "^3.0.0",
     "@prisma/client": "^5.14.0",
     "@prisma/extension-accelerate": "^1.1.0",
+    "ahooks": "^3.8.0",
     "antd": "^5.17.3",
     "antd-style": "^3.6.2",
     "dayjs": "^1.11.11",
