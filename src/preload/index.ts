@@ -1,7 +1,9 @@
 import { electronAPI } from '@electron-toolkit/preload'
+import { note } from '@prisma/client'
 import { contextBridge } from 'electron'
 import { IApi } from '../renderer/src/interface/api'
-import { getAllNote, getAllRelation } from './service/get'
+import { getAllNote, getAllRelation, getNoteById } from './service/get'
+import { updateNoteById } from './service/update'
 
 // Custom APIs for renderer
 const api: IApi = {
@@ -10,8 +12,19 @@ const api: IApi = {
       const res = await getAllNote()
       return res
     },
+    getNoteById: async (id: string) => {
+      const res = await getNoteById(id)
+      return res
+    },
+
     getAllRelation: async () => {
       const res = await getAllRelation()
+      return res
+    }
+  },
+  update: {
+    updateNoteById: async (id: string, data: Partial<note>) => {
+      const res = await updateNoteById(id, data)
       return res
     }
   }

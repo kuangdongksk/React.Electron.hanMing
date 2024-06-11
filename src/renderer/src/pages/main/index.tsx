@@ -1,4 +1,4 @@
-import G6, { Graph } from '@antv/g6'
+import G6, { EdgeConfig, Graph, IG6GraphEvent, INode, NodeConfig } from '@antv/g6'
 import { Bool } from '@renderer/constant/base'
 import { IApi } from '@renderer/interface/api'
 import { I2DCoordinate } from '@renderer/interface/graph'
@@ -10,7 +10,7 @@ import 图配置 from './constant/config'
 import { 图事件列表 } from './constant/event'
 import './index.less'
 
-const { get } = window.api as IApi
+const { get, update } = window.api as IApi
 
 const data = {
   // 点集
@@ -29,6 +29,9 @@ const Main = () => {
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
 
+  const [nodeData, setNodeData] = useSetState<NodeConfig[]>([])
+  const [edgeData, setEdgeData] = useSetState<EdgeConfig[]>([])
+
   const [isShowForm, { setTrue: setShowForm, setFalse: setHideForm }] = useBoolean(false)
 
   const [canvasDblClickPositionOnCanvas, setCanvasDblClickPositionOnCanvas] =
@@ -39,7 +42,8 @@ const Main = () => {
 
   let graph: Graph
 
-  const handleCanvasDblClick = (e: any) => {
+  //#region 事件
+  const handleCanvasDblClick = (e: IG6GraphEvent) => {
     const node = graph.findById('isShowForm')
     const nodeState = stringArray2Obj<{
       isShowForm: Bool
@@ -54,10 +58,35 @@ const Main = () => {
     }
   }
 
+  const handleNodeDragend = (e: IG6GraphEvent) => {
+    console.log('handleNodeDragend', e)
+    const item = e.item! as INode
+    if (item.getID()) {
+      get.getNoteById(item.getID()).then((res) => {
+        console.log('res', res)
+        const attributesString = res?.attributes
+        const attributes = attributesString ? JSON.parse(attributesString) : {}
+        update
+          .updateNoteById(item.getID(), {
+            attributes: JSON.stringify({
+              ...attributes,
+              x: Math.floor(item.getModel().x!),
+              y: Math.floor(item.getModel().y!)
+            })
+          })
+          .then((res) => {
+            console.log('res', res)
+          })
+      })
+    }
+    // update.updateNoteById(e.item._cfg.id, {})
+  }
+
   const bindEvents = () => {
     图事件列表.forEach(({ eventName, callback, once }) => {
       graph.on(eventName, callback, once)
     })
+    graph.on('node:dragend', handleNodeDragend)
     graph.on('canvas:dblclick', handleCanvasDblClick)
   }
 
@@ -78,7 +107,9 @@ const Main = () => {
 
   const fetchData = () => {
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
-      console.log(res)
+      setNodeData(res[0].map(noteToNode))
+      setEdgeData(res[1].map(relationToEdge))
+
       graph.data({
         nodes: res[0].map(noteToNode),
         edges: res[1].map(relationToEdge)
