@@ -1,12 +1,13 @@
 import G6, { Graph } from '@antv/g6'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import { determinesIfThe2DCoordinatesAreEqual } from '@renderer/tools/graph/position'
-import { useBoolean, useMount, useSetState } from 'ahooks'
-import { useRef } from 'react'
+import { useBoolean, useMount, useSetState, useSize } from 'ahooks'
+import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
 import 图配置 from './constant/config'
 import { 图事件列表 } from './constant/event'
 import './index.less'
+
 const data = {
   // 点集
   nodes: [
@@ -31,7 +32,8 @@ const data = {
 }
 
 const Main = () => {
-  const 翰冥元素 = useRef(null)
+  const 翰冥元素 = useRef<HTMLDivElement>(null)
+  const size = useSize(document.body)
 
   const [isShowForm, { toggle, setTrue }] = useBoolean(false)
   const [canvasDblClickPositionOnCanvas, setCanvasDblClickPositionOnCanvas] =
@@ -40,13 +42,25 @@ const Main = () => {
       y: 0
     })
 
-  let 图: Graph
+  let graph: Graph
+
+  const initGraph = () => {
+    if (!graph) {
+      graph = new G6.Graph({
+        ...图配置,
+        container: 翰冥元素.current!
+      })
+    }
+    graph.data(data)
+    graph.render()
+    bindEvents()
+  }
 
   const bindEvents = () => {
     图事件列表.forEach(({ eventName, callback, once }) => {
-      图.on(eventName, callback, once)
+      graph.on(eventName, callback, once)
     })
-    图.on('canvas:dblclick', (e) => {
+    graph.on('canvas:dblclick', (e) => {
       console.log(canvasDblClickPositionOnCanvas, e)
       if (
         !determinesIfThe2DCoordinatesAreEqual(canvasDblClickPositionOnCanvas, {
@@ -65,35 +79,36 @@ const Main = () => {
   }
 
   useMount(() => {
-    if (!图) {
-      图 = new G6.Graph({
-        ...图配置,
-        container: 翰冥元素.current!
-      })
-    }
-    图.data(data)
-    图.render()
-    bindEvents()
+    initGraph()
   })
 
+  useEffect(() => {
+    // if (graph) {
+    //   const container = document.querySelector('.graph')
+    //   if (container) {
+    //     console.log(container.clientWidth, container.clientHeight)
+    //     graph.changeSize(container.clientWidth, container.clientHeight)
+    //   }
+    // }
+  }, [size])
+
   return (
-    <div className="main">
-      <div className="图" ref={翰冥元素}>
-        {isShowForm && (
-          <div
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              zIndex: 100,
-              transform: 'translate(-50%, -50%)'
-            }}
-          >
-            <NoteForm />
-          </div>
-        )}
-      </div>
-    </div>
+    <>
+      {isShowForm && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            zIndex: 100,
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <NoteForm />
+        </div>
+      )}
+      <div className="graph" ref={翰冥元素}></div>
+    </>
   )
 }
 export default Main
