@@ -1,6 +1,7 @@
 import G6, { Graph } from '@antv/g6'
+import { Bool } from '@renderer/constant/base'
 import { I2DCoordinate } from '@renderer/interface/graph'
-import { determinesIfThe2DCoordinatesAreEqual } from '@renderer/tools/graph/position'
+import { stringArray2Obj } from '@renderer/tools/graph/transData'
 import { useBoolean, useMount, useSetState, useSize } from 'ahooks'
 import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
@@ -20,6 +21,9 @@ const data = {
       id: 'node2', // String，该节点存在则必须，节点的唯一标识
       x: 300, // Number，可选，节点位置的 x 值
       y: 200 // Number，可选，节点位置的 y 值
+    },
+    {
+      id: 'isShowForm'
     }
   ],
   // 边集
@@ -32,10 +36,11 @@ const data = {
 }
 
 const Main = () => {
-  const 翰冥元素 = useRef<HTMLDivElement>(null)
-  const size = useSize(document.body)
+  const graphRef = useRef<HTMLDivElement>(null)
+  const size = useSize(graphRef)
 
-  const [isShowForm, { toggle, setTrue }] = useBoolean(false)
+  const [isShowForm, { setTrue: setShowForm, setFalse: setHideForm }] = useBoolean(false)
+
   const [canvasDblClickPositionOnCanvas, setCanvasDblClickPositionOnCanvas] =
     useSetState<I2DCoordinate>({
       x: 0,
@@ -44,38 +49,41 @@ const Main = () => {
 
   let graph: Graph
 
-  const initGraph = () => {
-    if (!graph) {
-      graph = new G6.Graph({
-        ...图配置,
-        container: 翰冥元素.current!
-      })
+  const handleCanvasDblClick = (e: any) => {
+    const node = graph.findById('isShowForm')
+    const nodeState = stringArray2Obj<{
+      isShowForm: Bool
+    }>(node?.getStates())
+
+    if (nodeState.isShowForm === Bool.FALSE) {
+      setShowForm()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.TRUE)
+    } else {
+      setHideForm()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
     }
-    graph.data(data)
-    graph.render()
-    bindEvents()
   }
 
   const bindEvents = () => {
     图事件列表.forEach(({ eventName, callback, once }) => {
       graph.on(eventName, callback, once)
     })
-    graph.on('canvas:dblclick', (e) => {
-      console.log(canvasDblClickPositionOnCanvas, e)
-      if (
-        !determinesIfThe2DCoordinatesAreEqual(canvasDblClickPositionOnCanvas, {
-          x: e.canvasX,
-          y: e.canvasY
-        })
-      ) {
-        setCanvasDblClickPositionOnCanvas({
-          x: e.canvasX,
-          y: e.canvasY
-        })
-        toggle()
-        // setTrue()
-      }
-    })
+    graph.on('canvas:dblclick', handleCanvasDblClick)
+  }
+
+  const initGraph = () => {
+    if (!graph) {
+      graph = new G6.Graph({
+        ...图配置,
+        container: graphRef.current!
+      })
+
+      graph.data(data)
+      graph.render()
+      bindEvents()
+      graph.fitView()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
+    }
   }
 
   useMount(() => {
@@ -83,14 +91,11 @@ const Main = () => {
   })
 
   useEffect(() => {
-    // if (graph) {
-    //   const container = document.querySelector('.graph')
-    //   if (container) {
-    //     console.log(container.clientWidth, container.clientHeight)
-    //     graph.changeSize(container.clientWidth, container.clientHeight)
-    //   }
-    // }
-  }, [size])
+    if (graph && size) {
+      graph.changeSize(size.width, size.height)
+      graph.fitView()
+    }
+  }, [size?.height, size?.width])
 
   return (
     <>
@@ -107,7 +112,7 @@ const Main = () => {
           <NoteForm />
         </div>
       )}
-      <div className="graph" ref={翰冥元素}></div>
+      <div className="graph" ref={graphRef} onDoubleClick={() => {}}></div>
     </>
   )
 }
