@@ -13,10 +13,10 @@
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "p": "electron-vite preview",
     "d": "electron-vite dev",
-    "b": "npm run typecheck && electron-vite build",
+    "b": " electron-vite build",
     "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "npm run build && electron-builder --dir",
-    "build:win": "npm run build && electron-builder --win",
+    "b:u": "npm run b && electron-builder --dir",
+    "b:w": "npm run b && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux"
   },
