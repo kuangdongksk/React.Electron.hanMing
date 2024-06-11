@@ -1,8 +1,21 @@
-import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { contextBridge } from 'electron'
+import { IApi } from '../renderer/src/interface/api'
+import { getAllNote } from './service/get'
 
 // Custom APIs for renderer
-const api = {}
+const api: IApi = {
+  get: {
+    getAllNote: async () => {
+      const res = await getAllNote()
+      return res
+    },
+    getAllRelation: async () => {
+      const res = await getAllNote()
+      return res
+    }
+  }
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

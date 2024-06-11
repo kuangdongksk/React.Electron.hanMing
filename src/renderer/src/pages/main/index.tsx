@@ -1,5 +1,6 @@
 import G6, { Graph } from '@antv/g6'
 import { Bool } from '@renderer/constant/base'
+import { IApi } from '@renderer/interface/api'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import { stringArray2Obj } from '@renderer/tools/graph/transData'
 import { useBoolean, useMount, useSetState, useSize } from 'ahooks'
@@ -9,30 +10,19 @@ import 图配置 from './constant/config'
 import { 图事件列表 } from './constant/event'
 import './index.less'
 
+const api = window.api as IApi
+
 const data = {
   // 点集
   nodes: [
     {
-      id: 'node1', // String，该节点存在则必须，节点的唯一标识
-      x: 100, // Number，可选，节点位置的 x 值
-      y: 200 // Number，可选，节点位置的 y 值
-    },
-    {
-      id: 'node2', // String，该节点存在则必须，节点的唯一标识
-      x: 300, // Number，可选，节点位置的 x 值
-      y: 200 // Number，可选，节点位置的 y 值
-    },
-    {
-      id: 'isShowForm'
+      id: 'isShowForm',
+      x: 0,
+      y: 0
     }
   ],
   // 边集
-  edges: [
-    {
-      source: 'node1', // String，必须，起始点 id
-      target: 'node2' // String，必须，目标点 id
-    }
-  ]
+  edges: []
 }
 
 const Main = () => {
@@ -88,6 +78,25 @@ const Main = () => {
 
   useMount(() => {
     initGraph()
+    api.get.getAllNote().then((res) => {
+      graph.data({
+        nodes: res
+          .map((item, i) => ({
+            id: item.id,
+            x: i * 100,
+            y: i * 100
+          }))
+          .concat([
+            {
+              id: 'isShowForm',
+              x: 0,
+              y: 0
+            }
+          ]),
+        edges: []
+      })
+      graph.render()
+    })
   })
 
   useEffect(() => {
