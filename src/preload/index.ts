@@ -1,7 +1,7 @@
 import { electronAPI } from '@electron-toolkit/preload'
 import { contextBridge } from 'electron'
 import { IApi } from '../renderer/src/interface/api'
-import { getAllNote } from './service/get'
+import { getAllNote, getAllRelation } from './service/get'
 
 // Custom APIs for renderer
 const api: IApi = {
@@ -11,7 +11,7 @@ const api: IApi = {
       return res
     },
     getAllRelation: async () => {
-      const res = await getAllNote()
+      const res = await getAllRelation()
       return res
     }
   }

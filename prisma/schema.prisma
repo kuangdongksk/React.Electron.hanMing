@@ -8,20 +8,23 @@ datasource db {
 }
 
 model note {
-  id         String  @id
-  noteId     String? @default("no data")
-  content    String?
-  tag        String? @default("[]")
-  attributes String? @default("{}")
-  relations  String? @default("[]")
+  id         String @id
+  noteId     String @default("no data")
+  content    String @default("空")
+  tag        String @default("[]")
+  attributes String @default("{}")
+  relations  String @default("[]")
 }
 
 model relation {
-  id       String  @id
-  name     String?
-  relation String? @default("{}")
+  id       String @id
+  name     String @default("undefind")
+  relation String @default("{}")
+  source   String @default("undefind")
+  target   String @default("undefind")
 }
 
 model tag {
-  id Int @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
+  content String @default("undefind")
 }

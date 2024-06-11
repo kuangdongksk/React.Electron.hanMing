@@ -2,7 +2,7 @@ import G6, { Graph } from '@antv/g6'
 import { Bool } from '@renderer/constant/base'
 import { IApi } from '@renderer/interface/api'
 import { I2DCoordinate } from '@renderer/interface/graph'
-import { stringArray2Obj } from '@renderer/tools/graph/transData'
+import { noteToNode, relationToEdge, stringArray2Obj } from '@renderer/tools/graph/transData'
 import { useBoolean, useMount, useSetState, useSize } from 'ahooks'
 import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
@@ -10,7 +10,7 @@ import 图配置 from './constant/config'
 import { 图事件列表 } from './constant/event'
 import './index.less'
 
-const api = window.api as IApi
+const { get } = window.api as IApi
 
 const data = {
   // 点集
@@ -76,27 +76,20 @@ const Main = () => {
     }
   }
 
-  useMount(() => {
-    initGraph()
-    api.get.getAllNote().then((res) => {
+  const fetchData = () => {
+    Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
+      console.log(res)
       graph.data({
-        nodes: res
-          .map((item, i) => ({
-            id: item.id,
-            x: i * 100,
-            y: i * 100
-          }))
-          .concat([
-            {
-              id: 'isShowForm',
-              x: 0,
-              y: 0
-            }
-          ]),
-        edges: []
+        nodes: res[0].map(noteToNode),
+        edges: res[1].map(relationToEdge)
       })
       graph.render()
     })
+  }
+
+  useMount(() => {
+    initGraph()
+    fetchData()
   })
 
   useEffect(() => {
