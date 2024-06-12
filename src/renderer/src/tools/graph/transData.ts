@@ -1,7 +1,7 @@
 import { EdgeConfig, NodeConfig } from '@antv/g6'
 import { note, relation } from '@prisma/client'
 
-export function stringArray2Obj<T>(strArr: string[]): T {
+export function stringArrayToObj<T>(strArr: string[]): T {
   return strArr.reduce((obj, item) => {
     const [key, value] = item.split(':')
     obj[key] = value

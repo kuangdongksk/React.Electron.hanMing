@@ -2,7 +2,7 @@ import G6, { EdgeConfig, Graph, IG6GraphEvent, INode, NodeConfig } from '@antv/g
 import { Bool } from '@renderer/constant/base'
 import { IApi } from '@renderer/interface/api'
 import { I2DCoordinate } from '@renderer/interface/graph'
-import { noteToNode, relationToEdge, stringArray2Obj } from '@renderer/tools/graph/transData'
+import { noteToNode, relationToEdge, stringArrayToObj } from '@renderer/tools/graph/transData'
 import { useBoolean, useMount, useSetState, useSize } from 'ahooks'
 import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
@@ -44,8 +44,14 @@ const Main = () => {
 
   //#region 事件
   const handleCanvasDblClick = (e: IG6GraphEvent) => {
+    const position = {
+      x: Math.floor(e.canvasX),
+      y: Math.floor(e.canvasY)
+    }
+    setCanvasDblClickPositionOnCanvas(position)
+
     const node = graph.findById('isShowForm')
-    const nodeState = stringArray2Obj<{
+    const nodeState = stringArrayToObj<{
       isShowForm: Bool
     }>(node?.getStates())
 
@@ -79,7 +85,6 @@ const Main = () => {
           })
       })
     }
-    // update.updateNoteById(e.item._cfg.id, {})
   }
 
   const bindEvents = () => {
@@ -142,7 +147,7 @@ const Main = () => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <NoteForm />
+          <NoteForm position={canvasDblClickPositionOnCanvas} />
         </div>
       )}
       <div className="graph" ref={graphRef} onDoubleClick={() => {}}></div>
