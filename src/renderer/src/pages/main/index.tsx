@@ -25,6 +25,7 @@ const data = {
   edges: []
 }
 
+let graph: Graph
 const Main = () => {
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
@@ -39,8 +40,6 @@ const Main = () => {
       x: 0,
       y: 0
     })
-
-  let graph: Graph
 
   //#region 事件
   const handleCanvasDblClick = (e: IG6GraphEvent) => {
@@ -129,9 +128,8 @@ const Main = () => {
   })
 
   useEffect(() => {
-    if (graph && size) {
+    if (size && graph) {
       graph.changeSize(size.width, size.height)
-      graph.fitView()
     }
   }, [size?.height, size?.width])
 
