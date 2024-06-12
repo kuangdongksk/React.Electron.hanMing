@@ -1,8 +1,8 @@
 import App from '@renderer/App'
 import Main from '@renderer/pages/main'
-import { createBrowserRouter } from 'react-router-dom'
+import { createHashRouter } from 'react-router-dom'
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <App />,
