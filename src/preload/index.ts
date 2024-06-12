@@ -1,4 +1,5 @@
 import { electronAPI } from '@electron-toolkit/preload'
+import { note } from '@prisma/client'
 import { contextBridge } from 'electron'
 import { IApi } from '../renderer/src/interface/api'
 import { createNote } from './service/create'

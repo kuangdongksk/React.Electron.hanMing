@@ -9,6 +9,7 @@ import {
   stringArrayToObj
 } from '@renderer/tools/graph/transData'
 import { useBoolean, useMount, useSetState, useSize } from 'ahooks'
+import { Spin } from 'antd'
 import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
 import 图配置 from './constant/config'
@@ -39,6 +40,7 @@ const Main = () => {
   const [edgeData, setEdgeData] = useSetState<EdgeConfig[]>([])
 
   const [isShowForm, { setTrue: setShowForm, setFalse: setHideForm }] = useBoolean(false)
+  const [isLoading, { setTrue: setLoading, setFalse: setLoadEnd }] = useBoolean(false)
 
   const [canvasDblClickPositionOnCanvas, setCanvasDblClickPositionOnCanvas] =
     useSetState<I2DCoordinate>({
@@ -110,11 +112,11 @@ const Main = () => {
       graph.render()
       bindEvents()
       graph.fitView()
-      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
     }
   }
 
   const fetchData = () => {
+    setLoading()
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
       setNodeData(res[0].map(noteToNode))
       setEdgeData(res[1].map(relationToEdge))
@@ -124,6 +126,8 @@ const Main = () => {
         edges: res[1].map(relationToEdge)
       })
       graph.render()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
+      setLoadEnd()
     })
   }
 
@@ -163,6 +167,7 @@ const Main = () => {
           <NoteForm position={canvasDblClickPositionOnCanvas} onSubmit={onSubmit} />
         </div>
       )}
+      <Spin spinning={isLoading} />
       <div className="graph" ref={graphRef} onDoubleClick={() => {}}></div>
     </>
   )
