@@ -2,7 +2,12 @@ import G6, { EdgeConfig, Graph, IG6GraphEvent, INode, NodeConfig } from '@antv/g
 import { Bool } from '@renderer/constant/base'
 import { IApi } from '@renderer/interface/api'
 import { I2DCoordinate } from '@renderer/interface/graph'
-import { noteToNode, relationToEdge, stringArrayToObj } from '@renderer/tools/graph/transData'
+import {
+  formToNote,
+  noteToNode,
+  relationToEdge,
+  stringArrayToObj
+} from '@renderer/tools/graph/transData'
 import { useBoolean, useMount, useSetState, useSize } from 'ahooks'
 import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
@@ -10,7 +15,7 @@ import 图配置 from './constant/config'
 import { 图事件列表 } from './constant/event'
 import './index.less'
 
-const { get, update } = window.api as IApi
+const { create, get, update } = window.api as IApi
 
 const data = {
   // 点集
@@ -122,6 +127,16 @@ const Main = () => {
     })
   }
 
+  const onSubmit = (values) => {
+    create.createNote(formToNote(values)).then((res) => {
+      console.log('res', res)
+      fetchData()
+      setHideForm()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
+    })
+  }
+  //#endregion
+
   useMount(() => {
     initGraph()
     fetchData()
@@ -145,7 +160,7 @@ const Main = () => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <NoteForm position={canvasDblClickPositionOnCanvas} />
+          <NoteForm position={canvasDblClickPositionOnCanvas} onSubmit={onSubmit} />
         </div>
       )}
       <div className="graph" ref={graphRef} onDoubleClick={() => {}}></div>

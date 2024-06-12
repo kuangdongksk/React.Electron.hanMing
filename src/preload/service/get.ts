@@ -1,5 +1,5 @@
-import { PrismaClient, note, relation } from '@prisma/client'
-const prisma = new PrismaClient()
+import { note, relation } from '@prisma/client'
+import { prisma } from '.'
 
 //#region note
 export function getAllNote(): Promise<note[]> {

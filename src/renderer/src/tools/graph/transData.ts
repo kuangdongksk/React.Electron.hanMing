@@ -1,5 +1,6 @@
 import { EdgeConfig, NodeConfig } from '@antv/g6'
 import { note, relation } from '@prisma/client'
+import { nanoid } from 'nanoid'
 
 export function stringArrayToObj<T>(strArr: string[]): T {
   return strArr.reduce((obj, item) => {
@@ -9,6 +10,7 @@ export function stringArrayToObj<T>(strArr: string[]): T {
   }, {}) as T
 }
 
+//#region note
 export function noteToNode(note: note): NodeConfig {
   const { attributes: attributesStr } = note
 
@@ -20,6 +22,27 @@ export function noteToNode(note: note): NodeConfig {
     y: attributes.y
   }
 }
+
+export function formToNote(formValue:{
+  content:string,
+  x:number,
+  y:number
+}):note{
+  const id = nanoid()
+  return {
+    id,
+    noteId:id,
+    content:formValue.content,
+    attributes:JSON.stringify({
+      x:formValue.x,
+      y:formValue.y
+    }),
+    tag:'',
+    relations:''
+  }
+}
+
+//#region relation
 
 export function relationToEdge(relation: relation): EdgeConfig {
   return {

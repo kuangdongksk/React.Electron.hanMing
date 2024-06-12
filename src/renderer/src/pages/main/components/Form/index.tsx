@@ -1,14 +1,23 @@
 import { I2DCoordinate } from '@renderer/interface/graph'
-import { Collapse, Form, Input } from 'antd'
+import { Button, Collapse, Form, Input } from 'antd'
 export interface NoteFormProps {
   position: I2DCoordinate
+  onSubmit: (values: any) => void
 }
 
 export default function (props: NoteFormProps) {
-  const { position } = props
+  const { position, onSubmit } = props
 
   return (
-    <Form>
+    <Form
+      initialValues={{
+        x: position.x,
+        y: position.y
+      }}
+      onFinish={(values) => {
+        onSubmit(values)
+      }}
+    >
       <Collapse
         items={[
           {
@@ -21,18 +30,20 @@ export default function (props: NoteFormProps) {
             )
           }
         ]}
-      ></Collapse>
-      <Form.Item label="内容" name="content">
+      />
+      <Form.Item label="x" name="x">
+        <Input disabled />
+      </Form.Item>
+      <Form.Item label="y" name="y">
+        <Input disabled />
+      </Form.Item>
+
+      <Form.Item label="内容" name="content" rules={[{ required: true, message: '请输入内容' }]}>
         <Input />
       </Form.Item>
-      <Form.Item label="标签" name="tag">
-        <Input />
-      </Form.Item>
-      <Form.Item label="属性" name="property">
-        <Input />
-      </Form.Item>
-      <Form.Item label="关系" name="relation">
-        <Input />
+
+      <Form.Item>
+        <Button htmlType="submit">添加</Button>
       </Form.Item>
     </Form>
   )
