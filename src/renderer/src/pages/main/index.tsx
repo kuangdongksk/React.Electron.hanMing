@@ -71,24 +71,18 @@ const Main = () => {
   }
 
   const handleNodeDragend = (e: IG6GraphEvent) => {
-    console.log('handleNodeDragend', e)
     const item = e.item! as INode
     if (item.getID()) {
       get.getNoteById(item.getID()).then((res) => {
-        console.log('res', res)
         const attributesString = res?.attributes
         const attributes = attributesString ? JSON.parse(attributesString) : {}
-        update
-          .updateNoteById(item.getID(), {
-            attributes: JSON.stringify({
-              ...attributes,
-              x: Math.floor(item.getModel().x!),
-              y: Math.floor(item.getModel().y!)
-            })
+        update.updateNoteById(item.getID(), {
+          attributes: JSON.stringify({
+            ...attributes,
+            x: Math.floor(item.getModel().x!),
+            y: Math.floor(item.getModel().y!)
           })
-          .then((res) => {
-            console.log('res', res)
-          })
+        })
       })
     }
   }
@@ -111,7 +105,6 @@ const Main = () => {
       graph.data(data)
       graph.render()
       bindEvents()
-      graph.fitView()
     }
   }
 
@@ -133,7 +126,6 @@ const Main = () => {
 
   const onSubmit = (values) => {
     create.createNote(formToNote(values)).then((res) => {
-      console.log('res', res)
       fetchData()
       setHideForm()
       graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
