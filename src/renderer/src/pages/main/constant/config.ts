@@ -2,6 +2,24 @@ import G6, { GraphOptions, ModelStyle } from '@antv/g6'
 import { ERed, ETeal } from '@renderer/constant/color'
 import { TBooleanStateName } from '@renderer/types/graph/state'
 //#region 插件
+const menu = new G6.Menu({
+  getContent(e) {
+    const outDiv = document.createElement('div')
+    outDiv.style.width = '180px'
+    outDiv.innerHTML = `<ul>
+        <li>测试01</li>
+        <li>测试01</li>
+        <li>测试01</li>
+        <li>测试01</li>
+        <li>测试01</li>
+      </ul>`
+    return outDiv
+  },
+  handleMenuClick(target, item) {
+    console.log(target, item)
+  },
+  itemTypes: ['node']
+})
 const tooltip = new G6.Tooltip({
   offsetX: 10,
   offsetY: 20,
@@ -17,6 +35,7 @@ const tooltip = new G6.Tooltip({
   },
   itemTypes: ['node']
 })
+//#endregion
 
 //#region 样式
 //#region 默认样式
@@ -104,7 +123,7 @@ const comboStateStyles: { [key in TBooleanStateName]: {} } = {
 export default {
   container: '',
   fitView: true,
-  plugins: [tooltip],
+  plugins: [menu, tooltip],
   modes: {
     default: [
       //#region 画布事件

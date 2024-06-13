@@ -34,119 +34,127 @@ const data = {
 
 let graph: Graph;
 const Main = () => {
-  const graphRef = useRef<HTMLDivElement>(null);
-  const size = useSize(graphRef);
+  const graphRef = useRef<HTMLDivElement>(null)
+  const size = useSize(graphRef)
 
-  const [nodeData, setNodeData] = useSetState<NodeConfig[]>([]);
-  const [edgeData, setEdgeData] = useSetState<EdgeConfig[]>([]);
+  const [nodeData, setNodeData] = useSetState<NodeConfig[]>([])
+  const [edgeData, setEdgeData] = useSetState<EdgeConfig[]>([])
 
-  const [isShowForm, { setTrue: setShowForm, setFalse: setHideForm }] = useBoolean(false);
-  const [isLoading, { setTrue: setLoading, setFalse: setLoadEnd }] = useBoolean(false);
+  const [isShowForm, { setTrue: setShowForm, setFalse: setHideForm }] = useBoolean(false)
+  const [isLoading, { setTrue: setLoading, setFalse: setLoadEnd }] = useBoolean(false)
 
   const [canvasDblClickPositionOnCanvas, setCanvasDblClickPositionOnCanvas] =
     useSetState<I2DCoordinate>({
       x: 0,
-      y: 0,
-    });
+      y: 0
+    })
 
   //#region 事件
   const handleCanvasDblClick = (e: IG6GraphEvent) => {
     const position = {
       x: Math.floor(e.canvasX),
-      y: Math.floor(e.canvasY),
-    };
-    setCanvasDblClickPositionOnCanvas(position);
+      y: Math.floor(e.canvasY)
+    }
+    setCanvasDblClickPositionOnCanvas(position)
 
-    const node = graph.findById('isShowForm');
+    const node = graph.findById('isShowForm')
     const nodeState = stringArrayToObj<{
-      isShowForm: Bool;
-    }>(node?.getStates());
+      isShowForm: Bool
+    }>(node?.getStates())
 
     if (nodeState.isShowForm === Bool.FALSE) {
-      setShowForm();
-      graph.setItemState('isShowForm', 'isShowForm', Bool.TRUE);
+      setShowForm()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.TRUE)
     } else {
-      setHideForm();
-      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE);
+      setHideForm()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
     }
-  };
+  }
 
+  //#region node事件
   const handleNodeDragend = (e: IG6GraphEvent) => {
-    const item = e.item! as INode;
+    const item = e.item! as INode
     if (item.getID()) {
       get.getNoteById(item.getID()).then((res) => {
-        const attributesString = res?.attributes;
-        const attributes = attributesString ? JSON.parse(attributesString) : {};
+        const attributesString = res?.attributes
+        const attributes = attributesString ? JSON.parse(attributesString) : {}
         update.updateNoteById(item.getID(), {
           attributes: JSON.stringify({
             ...attributes,
             x: Math.floor(item.getModel().x!),
-            y: Math.floor(item.getModel().y!),
-          }),
-        });
-      });
+            y: Math.floor(item.getModel().y!)
+          })
+        })
+      })
     }
-  };
+  }
+
+  const handleNodeContextmenu = (e: IG6GraphEvent) => {
+    console.log(e)
+  }
+  //#endregion
+  //#endregion
 
   const bindEvents = () => {
     图事件列表.forEach(({ eventName, callback, once }) => {
-      graph.on(eventName, callback, once);
-    });
-    graph.on('node:dragend', handleNodeDragend);
-    graph.on('canvas:dblclick', handleCanvasDblClick);
-  };
+      graph.on(eventName, callback, once)
+    })
+    graph.on('node:dragend', handleNodeDragend)
+    graph.on('canvas:dblclick', handleCanvasDblClick)
+    graph.on('node:contextmenu', handleNodeContextmenu)
+  }
 
   const initGraph = () => {
     if (!graph) {
       graph = new G6.Graph({
         ...图配置,
-        container: graphRef.current!,
-      });
+        container: graphRef.current!
+      })
 
-      graph.data(data);
-      graph.render();
-      bindEvents();
+      graph.data(data)
+      graph.render()
+      bindEvents()
     }
-  };
+  }
 
   const fetchData = () => {
-    setLoading();
+    setLoading()
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
-      const nodes = res[0].map(noteToNode);
-      const edges = res[1].map(relationToEdge);
-      setNodeData(nodes);
-      setEdgeData(edges);
+      const nodes = res[0].map(noteToNode)
+      const edges = res[1].map(relationToEdge)
+      setNodeData(nodes)
+      setEdgeData(edges)
 
-      G6.Util.processParallelEdges(edges);
+      G6.Util.processParallelEdges(edges)
       graph.data({
         nodes,
-        edges,
-      });
-      graph.render();
-      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE);
-      setLoadEnd();
-    });
-  };
+        edges
+      })
+      graph.render()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
+      setLoadEnd()
+    })
+  }
 
   const onSubmit = (values) => {
     create.createNote(formToNote(values)).then((res) => {
-      fetchData();
-      setHideForm();
-      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE);
-    });
-  };
+      fetchData()
+      setHideForm()
+      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
+    })
+  }
   //#endregion
 
   useMount(() => {
-    initGraph();
-    fetchData();
-  });
+    initGraph()
+    fetchData()
+  })
 
   useEffect(() => {
     if (size && graph) {
-      graph.changeSize(size.width, size.height);
+      graph.changeSize(size.width, size.height)
     }
-  }, [size?.height, size?.width]);
+  }, [size?.height, size?.width])
 
   return (
     <>
@@ -157,7 +165,7 @@ const Main = () => {
             top: '50%',
             left: '50%',
             zIndex: 100,
-            transform: 'translate(-50%, -50%)',
+            transform: 'translate(-50%, -50%)'
           }}
         >
           <NoteForm position={canvasDblClickPositionOnCanvas} onSubmit={onSubmit} />
@@ -167,6 +175,6 @@ const Main = () => {
       <Spin spinning={isLoading} />
       <div className="graph" ref={graphRef} onDoubleClick={() => {}}></div>
     </>
-  );
+  )
 };
 export default Main;
