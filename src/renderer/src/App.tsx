@@ -1,15 +1,25 @@
-import { Button, ConfigProvider, theme } from 'antd'
+import { useToggle } from 'ahooks'
+import { Button } from 'antd'
+import { ThemeProvider } from 'antd-style'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom'
 import './App.less'
+import useStyles from './App.style'
+import { DefaultTheme } from './constant/theme'
 
 function App(): JSX.Element {
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
+  const { styles, cx } = useStyles()
   const location = useLocation()
 
   const [now, setNow] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'))
+  const [appearance, { toggle: toggleAppearance }] = useToggle<'light', 'dark'>('light', 'dark')
+
+  const getTheme = (appearance: 'light' | 'dark') => {
+    return appearance === 'light' ? undefined : DefaultTheme
+  }
 
   /* 实时时间 */
   useEffect(() => {
@@ -20,22 +30,9 @@ function App(): JSX.Element {
   }, [])
 
   return (
-    <ConfigProvider
-      theme={{
-        algorithm: theme.darkAlgorithm,
-        token: {
-          colorPrimary: '#ffb4b4',
-          colorWarning: '#ffe1a4',
-          colorError: '#ff0004',
-          colorTextBase: '#ffcbcb',
-          colorBgBase: '#2c323c',
-          borderRadius: 0,
-          wireframe: true
-        }
-      }}
-    >
+    <ThemeProvider appearance={appearance} theme={getTheme(appearance)}>
       <div className="bg-[#4a4a4a] text-[#ffcdcd] flex flex-col h-screen">
-        <nav className="nav">
+        <nav className={styles.nav}>
           <NavLink to="main">画布</NavLink>
         </nav>
 
@@ -43,6 +40,7 @@ function App(): JSX.Element {
         <header className="bg-[#525252] flex-1 flex">
           <div className="pl-[8em]">{location.pathname.split('/')[1]}</div>
           <div className="flex-1"></div>
+          <span onClick={toggleAppearance}>{appearance}</span>
           <div className="pr-[2em]">{now}</div>
         </header>
 
@@ -77,7 +75,7 @@ function App(): JSX.Element {
           <div className="">右边</div>
         </footer>
       </div>
-    </ConfigProvider>
+    </ThemeProvider>
   )
 }
 
