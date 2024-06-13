@@ -1,4 +1,5 @@
 import G6, { GraphOptions, ModelStyle } from '@antv/g6'
+import { ERed, ETeal } from '@renderer/constant/color'
 import { TBooleanStateName } from '@renderer/types/graph/state'
 //#region 插件
 const tooltip = new G6.Tooltip({
@@ -26,14 +27,44 @@ const defaultNode: Partial<{
   color: string
 }> &
   ModelStyle = {
-  size: 10,
+  size: 5,
   style: {
-    shadowColor: 'rgba(256,256,256)',
+    stroke: ETeal.Brighter,
+    strokeOpacity: 0.5,
+    lineWidth: 1,
+    shadowColor: ETeal.Brightest,
     shadowBlur: 10
   },
+  label: 'id',
   labelCfg: {
+    position: 'bottom',
     style: {
-      fill: 'rgba(0,0,0)',
+      fill: ETeal.Brighter,
+      fontSize: 6
+    }
+  }
+}
+const defaultEdge: Partial<{
+  type: string
+  size: number | number[]
+  color: string
+}> &
+  ModelStyle = {
+  type: 'cubic-vertical',
+  size: 1,
+  style: {
+    lineWidth: 0.5,
+    shadowColor: ETeal.Brightest,
+    shadowBlur: 10,
+    endArrow: {
+      path: G6.Arrow.vee(5, 10, 0)
+    }
+  },
+  label: 'id',
+  labelCfg: {
+    position: 'bottom',
+    style: {
+      fill: ETeal.Brighter,
       fontSize: 6
     }
   }
@@ -42,32 +73,30 @@ const defaultNode: Partial<{
 //#region 状态样式
 const nodeStateStyles: { [key in TBooleanStateName]: {} } = {
   active: {
-    stroke: 'yellow',
-    lineWidth: 3
+    stroke: 'yellow'
   },
   selected: {
-    stroke: 'red',
-    lineWidth: 3
+    stroke: ERed.Brighter,
+    strokeOpacity: 0.5,
+    lineWidth: 1,
+    ShadowColor: ERed.Brightest,
+    shadowBlur: 3
   }
 }
 const edgeStateStyles: { [key in TBooleanStateName]: {} } = {
   active: {
-    stroke: 'yellow',
-    lineWidth: 3
+    stroke: 'yellow'
   },
   selected: {
-    stroke: 'red',
-    lineWidth: 3
+    stroke: 'red'
   }
 }
 const comboStateStyles: { [key in TBooleanStateName]: {} } = {
   active: {
-    stroke: 'yellow',
-    lineWidth: 3
+    stroke: 'yellow'
   },
   selected: {
-    stroke: 'red',
-    lineWidth: 3
+    stroke: 'red'
   }
 }
 //#endregion
@@ -109,12 +138,13 @@ export default {
       {
         type: 'drag-node',
         delegateStyle: { strokeOpacity: 0.3, fillOpacity: 0.3 },
-        delegate: false,
-        enableDebounce: true
+        delegate: false
+        // enableDebounce: true
       }
     ]
   },
   defaultNode,
+  defaultEdge,
   nodeStateStyles,
   edgeStateStyles,
   comboStateStyles

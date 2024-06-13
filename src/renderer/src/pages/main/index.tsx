@@ -111,12 +111,15 @@ const Main = () => {
   const fetchData = () => {
     setLoading()
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
-      setNodeData(res[0].map(noteToNode))
-      setEdgeData(res[1].map(relationToEdge))
+      const nodes = res[0].map(noteToNode)
+      const edges = res[1].map(relationToEdge)
+      setNodeData(nodes)
+      setEdgeData(edges)
 
+      G6.Util.processParallelEdges(edges)
       graph.data({
-        nodes: res[0].map(noteToNode),
-        edges: res[1].map(relationToEdge)
+        nodes,
+        edges
       })
       graph.render()
       graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
