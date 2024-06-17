@@ -8,6 +8,7 @@ import {
   relationToEdge,
   stringArrayToObj,
 } from '@renderer/tools/graph/transData';
+import { promiseAddTip } from '@renderer/util/function/requeest'
 import { useBoolean, useMount, useSetState, useSize } from 'ahooks';
 import { Spin } from 'antd';
 import { useEffect, useRef } from 'react';
@@ -78,13 +79,15 @@ const Main = () => {
       get.getNoteById(item.getID()).then((res) => {
         const attributesString = res?.attributes
         const attributes = attributesString ? JSON.parse(attributesString) : {}
-        update.updateNoteById(item.getID(), {
-          attributes: JSON.stringify({
-            ...attributes,
-            x: Math.floor(item.getModel().x!),
-            y: Math.floor(item.getModel().y!)
+        promiseAddTip(
+          update.updateNoteById(item.getID(), {
+            attributes: JSON.stringify({
+              ...attributes,
+              x: Math.floor(item.getModel().x!),
+              y: Math.floor(item.getModel().y!)
+            })
           })
-        })
+        )
       })
     }
   }

@@ -26,11 +26,12 @@ const tooltip = new G6.Tooltip({
   getContent(e) {
     const outDiv = document.createElement('div')
     outDiv.style.width = '180px'
-
-    outDiv.innerHTML = `
+    if (e?.item) {
+      outDiv.innerHTML = `
       <ul>
         <li>Label: ${e.item.getModel().label || e.item.getModel().id}</li>
       </ul>`
+    }
     return outDiv
   },
   itemTypes: ['node']
