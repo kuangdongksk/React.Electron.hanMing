@@ -9,7 +9,7 @@ import {
 } from '@renderer/tools/graph/transData';
 import { promiseAddTip } from '@renderer/util/function/requeest'
 import { useBoolean, useMount, useSetState, useSize, useUnmount } from 'ahooks'
-import { Spin } from 'antd';
+import { Modal, Spin } from 'antd'
 import { useEffect, useRef } from 'react';
 import NoteForm from './components/Form';
 import 图配置 from './constant/config';
@@ -176,20 +176,27 @@ const Main = () => {
 
   return (
     <>
-      {isShowForm && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            zIndex: 100,
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          <NoteForm position={canvasDblClickPositionOnCanvas} onSubmit={onSubmit} />
-        </div>
-      )}
-
+      <Modal
+        mask
+        maskClosable
+        closable={false}
+        footer={null}
+        open={isShowForm}
+        onCancel={setHideForm}
+        style={{
+          backgroundColor: 'transparent'
+        }}
+        styles={{
+          body: {
+            backgroundColor: 'transparent'
+          },
+          mask: {
+            backgroundColor: 'transparent'
+          }
+        }}
+      >
+        <NoteForm position={canvasDblClickPositionOnCanvas} onSubmit={onSubmit} />
+      </Modal>
       <Spin spinning={isLoading} />
       <div className="graph" ref={graphRef} onDoubleClick={() => {}}></div>
     </>
