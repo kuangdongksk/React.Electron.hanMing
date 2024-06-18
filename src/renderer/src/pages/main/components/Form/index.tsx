@@ -44,12 +44,14 @@ export default function (props: NoteFormProps) {
             }
           ]}
         />
-        <Form.Item label="x" name="x">
-          <Input disabled />
-        </Form.Item>
-        <Form.Item label="y" name="y">
-          <Input disabled />
-        </Form.Item>
+        <Space>
+          <Form.Item label="x" name="x">
+            <Input disabled />
+          </Form.Item>
+          <Form.Item label="y" name="y">
+            <Input disabled />
+          </Form.Item>
+        </Space>
 
         <Form.Item label="内容" name="content" rules={[{ required: true, message: '请输入内容' }]}>
           <Input />
@@ -75,23 +77,9 @@ export default function (props: NoteFormProps) {
                         })
                       }}
                     />
-                  </Form.Item>
-
-                  <Form.Item key={key} name={name}>
-                    <Select
-                      showSearch
-                      options={noteOptions}
-                      onSearch={(value) => {
-                        get.getNotesContentIncludeParam(value).then((res) => {
-                          setNoteOptions(
-                            res.map((item) => ({
-                              label: item.content,
-                              value: item.id
-                            }))
-                          )
-                        })
-                      }}
-                    />
+                    <Form.Item key={key} name={name} label="关系类型">
+                      <Select showSearch />
+                    </Form.Item>
                   </Form.Item>
                   <MinusCircleOutlined onClick={() => remove(name)} />
                 </Space>
