@@ -1,6 +1,5 @@
 import G6, { EdgeConfig, Graph, IG6GraphEvent, INode, NodeConfig } from '@antv/g6';
-import { Bool } from '@renderer/constant/base';
-import { IApi } from '@renderer/interface/api';
+import { Bool } from '@renderer/constant/base'
 import { I2DCoordinate } from '@renderer/interface/graph';
 import {
   formToNote,
@@ -9,7 +8,7 @@ import {
   stringArrayToObj,
 } from '@renderer/tools/graph/transData';
 import { promiseAddTip } from '@renderer/util/function/requeest'
-import { useBoolean, useMount, useSetState, useSize } from 'ahooks';
+import { useBoolean, useMount, useSetState, useSize, useUnmount } from 'ahooks'
 import { Spin } from 'antd';
 import { useEffect, useRef } from 'react';
 import NoteForm from './components/Form';
@@ -17,7 +16,7 @@ import 图配置 from './constant/config';
 import { 图事件列表 } from './constant/event';
 import './index.less';
 
-const { create, get, update } = window.api as IApi;
+const { create, get, update } = window.api
 
 const data = {
   // 点集
@@ -25,15 +24,15 @@ const data = {
     {
       id: 'isShowForm',
       x: 0,
-      y: 0,
-    },
+      y: 0
+    }
   ],
 
   // 边集
-  edges: [],
-};
+  edges: []
+}
 
-let graph: Graph;
+let graph: Graph
 const Main = () => {
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
@@ -107,6 +106,7 @@ const Main = () => {
     graph.on('node:contextmenu', handleNodeContextmenu)
   }
 
+  //#region 初始化
   const initGraph = () => {
     if (!graph) {
       graph = new G6.Graph({
@@ -119,7 +119,9 @@ const Main = () => {
       bindEvents()
     }
   }
+  //#endregion
 
+  //#region 拉取数据
   const fetchData = () => {
     setLoading()
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
@@ -138,7 +140,9 @@ const Main = () => {
       setLoadEnd()
     })
   }
+  //#endregion
 
+  //#region 提交表单
   const onSubmit = (values) => {
     create.createNote(formToNote(values)).then((res) => {
       fetchData()
@@ -147,10 +151,21 @@ const Main = () => {
     })
   }
   //#endregion
+  //#endregion
 
   useMount(() => {
     initGraph()
     fetchData()
+  })
+
+  useUnmount(() => {
+    // if (graph) {
+    //   graph.destroy()
+    //   graph = null as any
+    //   if (graphRef.current?.firstChild) {
+    //     graphRef.current?.removeChild(graphRef.current?.firstChild)
+    //   }
+    // }
   })
 
   useEffect(() => {
@@ -179,5 +194,5 @@ const Main = () => {
       <div className="graph" ref={graphRef} onDoubleClick={() => {}}></div>
     </>
   )
-};
+}
 export default Main;

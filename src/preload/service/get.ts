@@ -14,6 +14,16 @@ export function getNoteById(id: string): Promise<note | null> {
   })
 }
 
+export function getNotesContentIncludeParam(content: string): Promise<note[]> {
+  return prisma.note.findMany({
+    where: {
+      content: {
+        contains: content
+      }
+    }
+  })
+}
+
 //#region relation
 export function getAllRelation(): Promise<relation[]> {
   return prisma.relation.findMany()
