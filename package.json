@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@antv/g6": "^4.8.24",
+    "@antv/g6-react-node": "^1.4.8",
     "@atlaskit/pragmatic-drag-and-drop": "^1.1.12",
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
