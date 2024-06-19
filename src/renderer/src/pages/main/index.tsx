@@ -1,4 +1,6 @@
 import G6, { EdgeConfig, Graph, IG6GraphEvent, INode, NodeConfig } from '@antv/g6';
+import { createNodeFromReact } from '@antv/g6-react-node'
+import ListNode from '@renderer/components/customNode/ListNode'
 import { Bool } from '@renderer/constant/base'
 import { I2DCoordinate } from '@renderer/interface/graph';
 import {
@@ -17,6 +19,8 @@ import { 图事件列表 } from './constant/event';
 import './index.less';
 
 const { create, get, update } = window.api
+
+
 
 const data = {
   // 点集
@@ -109,6 +113,7 @@ const Main = () => {
   //#region 初始化
   const initGraph = () => {
     if (!graph) {
+      G6.registerNode('listNode', createNodeFromReact(ListNode))
       graph = new G6.Graph({
         ...图配置,
         container: graphRef.current!
@@ -125,7 +130,14 @@ const Main = () => {
   const fetchData = () => {
     setLoading()
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
-      const nodes = res[0].map(noteToNode)
+      const nodes = res[0].map(noteToNode).concat([
+        {
+          id: 'listNode',
+          type: 'listNode',
+          x: 0,
+          y: 0
+        }
+      ])
       const edges = res[1].map(relationToEdge)
       setNodeData(nodes)
       setEdgeData(edges)
