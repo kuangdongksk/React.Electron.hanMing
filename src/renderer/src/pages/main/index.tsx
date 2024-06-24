@@ -1,26 +1,49 @@
-import G6, { EdgeConfig, Graph, IG6GraphEvent, INode, NodeConfig } from '@antv/g6';
-import { createNodeFromReact } from '@antv/g6-react-node'
-import ListNode from '@renderer/components/customNode/ListNode'
+import G6, { EdgeConfig, Graph, IG6GraphEvent, INode, NodeConfig } from '@antv/g6'
+// import { createNodeFromReact } from '@antv/g6-react-node'
 import { Bool } from '@renderer/constant/base'
-import { I2DCoordinate } from '@renderer/interface/graph';
+import { I2DCoordinate } from '@renderer/interface/graph'
 import {
   formToNote,
   noteToNode,
   relationToEdge,
-  stringArrayToObj,
-} from '@renderer/tools/graph/transData';
+  stringArrayToObj
+} from '@renderer/tools/graph/transData'
 import { promiseAddTip } from '@renderer/util/function/requeest'
 import { useBoolean, useMount, useSetState, useSize, useUnmount } from 'ahooks'
 import { Modal, Spin } from 'antd'
-import { useEffect, useRef } from 'react';
-import NoteForm from './components/Form';
-import 图配置 from './constant/config';
-import { 图事件列表 } from './constant/event';
-import './index.less';
+import { useEffect, useRef } from 'react'
+import NoteForm from './components/Form'
+import 图配置 from './constant/config'
+import { 图事件列表 } from './constant/event'
 
+import List from '@renderer/components/customNode/ListNode/index'
+// import { List as List2 } from '@renderer/components/customNode/ListNode/index.react'
+import './index.less'
+
+// G6.registerNode('ListNode', createNodeFromReact(List2))
+G6.registerNode('ListNode', List)
+// G6.registerNode(
+//   'rect-xml',
+//   (cfg) => `
+//   <rect style={{
+//     width: 100, height: 20, fill: '#1890ff', stroke: '#1890ff', radius: [6, 6, 0, 0]
+//   }} keyshape="true" name="test">
+//     <text style={{
+// 			marginTop: 2,
+// 			marginLeft: 50,
+//       textAlign: 'center',
+//       fontWeight: 'bold',
+//       fill: '#fff' }}
+// 			name="title">${cfg.label || cfg.id}</text>
+//     <polygon style={{
+//       points:[[ 30, 30 ], [ 40, 20 ], [ 30, 50 ], [ 60, 100 ]],
+//           fill: 'red'
+//     }} />
+//         <polyline style={{ points: [[ 30, 30 ], [ 40, 20 ], [ 60, 100 ]] }} />
+//         </rect>
+// `
+// )
 const { create, get, update } = window.api
-
-
 
 const data = {
   // 点集
@@ -113,7 +136,6 @@ const Main = () => {
   //#region 初始化
   const initGraph = () => {
     if (!graph) {
-      G6.registerNode('listNode', createNodeFromReact(ListNode))
       graph = new G6.Graph({
         ...图配置,
         container: graphRef.current!
@@ -133,9 +155,11 @@ const Main = () => {
       const nodes = res[0].map(noteToNode).concat([
         {
           id: 'listNode',
-          type: 'listNode',
-          x: 0,
-          y: 0
+          type: 'ListNode'
+        },
+        {
+          id: 'rect-xml',
+          type: 'rect-xml'
         }
       ])
       const edges = res[1].map(relationToEdge)
@@ -214,4 +238,4 @@ const Main = () => {
     </>
   )
 }
-export default Main;
+export default Main
