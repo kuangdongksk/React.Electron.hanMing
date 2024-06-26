@@ -7,43 +7,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model mapTagNote {
+  id                         String @id
+  tag                        Int    @default(dbgenerated("'undefind'"))
+  note                       String @default("")
+  note_mapTagNote_noteTonote note   @relation("mapTagNote_noteTonote", fields: [note], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tag_mapTagNote_tagTotag    tag    @relation("mapTagNote_tagTotag", fields: [tag], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
 model note {
-  id                             String     @id
-  noteId                         String     @default("no data")
-  content                        String     @default("空")
-  tag                            String     @default("[]")
-  attributes                     String     @default("{}")
-  relation_relation_targetTonote relation[] @relation("relation_targetTonote")
-  relation_relation_sourceTonote relation[] @relation("relation_sourceTonote")
+  id                               String       @id
+  noteId                           String       @default("no data")
+  content                          String       @default("空")
+  tag                              String       @default("[]")
+  attributes                       String       @default("{}")
+  mapTagNote_mapTagNote_noteTonote mapTagNote[] @relation("mapTagNote_noteTonote")
+  relation_relation_targetTonote   relation[]   @relation("relation_targetTonote")
+  relation_relation_sourceTonote   relation[]   @relation("relation_sourceTonote")
 }
 
 model relation {
-  id                         String        @id
-  name                       String        @default("undefind")
-  source                     String        @default("undefind")
-  target                     String        @default("undefind")
-  note_relation_targetTonote note          @relation("relation_targetTonote", fields: [target], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  note_relation_sourceTonote note          @relation("relation_sourceTonote", fields: [source], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  relationMap                relationMap[]
-}
-
-model tag {
-  id      Int    @id @default(autoincrement())
-  content String @default("undefind")
-}
-
-model relationMap {
-  id             String       @id
-  relationId     String       @default("[]")
-  relationTypeId String       @default("undefind")
-  relationType   relationType @relation(fields: [relationTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  relation       relation     @relation(fields: [relationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                         String       @id
+  name                       String       @default("undefind")
+  type                       String       @default("")
+  source                     String       @default("undefind")
+  target                     String       @default("undefind")
+  note_relation_targetTonote note         @relation("relation_targetTonote", fields: [target], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  note_relation_sourceTonote note         @relation("relation_sourceTonote", fields: [source], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  relationType               relationType @relation(fields: [type], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model relationType {
-  id          String        @id
-  name        String        @default("unNamed")
-  style       String        @default("{}")
-  children    String        @default("[]")
-  relationMap relationMap[]
+  id       String     @id
+  name     String     @default("unNamed")
+  style    String     @default("{}")
+  children String     @default("[]")
+  relation relation[]
+}
+
+model tag {
+  id                             Int          @id @default(autoincrement())
+  content                        String       @default("undefind")
+  mapTagNote_mapTagNote_tagTotag mapTagNote[] @relation("mapTagNote_tagTotag")
 }
