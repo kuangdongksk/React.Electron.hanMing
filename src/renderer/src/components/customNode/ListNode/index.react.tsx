@@ -8,16 +8,19 @@ export const List = (cfg) => {
       <Rect
         style={{
           radius: [2],
-          stroke: ECyan.Brightest,
           lineWidth: '1',
           flexDirection: 'row',
-          display: 'flex'
+          display: 'flex',
+          hover: {
+            stroke: ECyan.Brightest,
+            strokeOpacity: 0.3
+          }
         }}
         draggable
         keyshape
       >
-        <Text style={{ fill: ECyan.Brightest }}>${cfg.order}</Text>
-        <Text style={{ fill: ECyan.Brightest }}>${cfg.id}</Text>
+        <Text style={{ fill: ECyan.Brightest, fontSize: '6', next: 'inline' }}>${cfg.order}</Text>
+        <Text style={{ fill: ECyan.Brightest, fontSize: '6', marginLeft: 6 }}>${cfg.id}</Text>
       </Rect>
     </Group>
   )

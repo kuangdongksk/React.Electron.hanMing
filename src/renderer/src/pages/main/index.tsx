@@ -16,29 +16,18 @@ import NoteForm from './components/Form'
 import 图配置 from './constant/config'
 import { 图事件列表 } from './constant/event'
 
-import List from '@renderer/components/customNode/ListNode/index'
+import ListNode from '@renderer/components/customNode/ListNode/index'
 // import { List as List2 } from '@renderer/components/customNode/ListNode/index.react'
 import ListCombo from '@renderer/components/customCombo/ListCombo'
 import './index.less'
 
+//#region 注册自定义组件
 // G6.registerNode('ListNode', createNodeFromReact(List2))
-G6.registerNode('ListNode', List)
+G6.registerNode('ListNode', ListNode)
 G6.registerCombo('listCombo', ListCombo, 'rect')
+//#endregion
+
 const { create, get, update } = window.api
-
-const data = {
-  // 点集
-  nodes: [
-    {
-      id: 'isShowForm',
-      x: 0,
-      y: 0
-    }
-  ],
-
-  // 边集
-  edges: []
-}
 
 let graph: Graph
 const Main = () => {
@@ -122,7 +111,7 @@ const Main = () => {
         container: graphRef.current!
       })
 
-      graph.data(data)
+      graph.data({ nodes: [], edges: [], combos: [] })
       graph.render()
       bindEvents()
     }
@@ -166,7 +155,7 @@ const Main = () => {
 
   //#region 提交表单
   const onSubmit = (values) => {
-    create.createNote(formToNote(values)).then((res) => {
+    create.createNote(formToNote(values)).then((_res) => {
       fetchData()
       setHideForm()
       graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)

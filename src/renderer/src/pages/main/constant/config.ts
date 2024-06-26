@@ -89,6 +89,29 @@ const defaultEdge: Partial<{
     }
   }
 }
+const defaultCombo: Partial<{
+  type: string
+  size: number | number[]
+  color: string
+}> &
+  ModelStyle = {
+  style: {
+    stroke: ETeal.Brighter,
+    strokeOpacity: 0.5,
+    lineWidth: 1,
+    shadowColor: ETeal.Brightest,
+    shadowBlur: 10,
+    fill: ETeal.Brightest,
+    fillOpacity: 0.1
+  },
+  label: 'id',
+  labelCfg: {
+    style: {
+      fill: ETeal.Brighter,
+      fontSize: 6
+    }
+  }
+}
 //#endregion
 //#region 状态样式
 const nodeStateStyles: { [key in TBooleanStateName]: {} } = {
@@ -165,6 +188,7 @@ export default {
   },
   defaultNode,
   defaultEdge,
+  defaultCombo,
   nodeStateStyles,
   edgeStateStyles,
   comboStateStyles
