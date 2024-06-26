@@ -18,31 +18,12 @@ import { 图事件列表 } from './constant/event'
 
 import List from '@renderer/components/customNode/ListNode/index'
 // import { List as List2 } from '@renderer/components/customNode/ListNode/index.react'
+import ListCombo from '@renderer/components/customCombo/ListCombo'
 import './index.less'
 
 // G6.registerNode('ListNode', createNodeFromReact(List2))
 G6.registerNode('ListNode', List)
-// G6.registerNode(
-//   'rect-xml',
-//   (cfg) => `
-//   <rect style={{
-//     width: 100, height: 20, fill: '#1890ff', stroke: '#1890ff', radius: [6, 6, 0, 0]
-//   }} keyshape="true" name="test">
-//     <text style={{
-// 			marginTop: 2,
-// 			marginLeft: 50,
-//       textAlign: 'center',
-//       fontWeight: 'bold',
-//       fill: '#fff' }}
-// 			name="title">${cfg.label || cfg.id}</text>
-//     <polygon style={{
-//       points:[[ 30, 30 ], [ 40, 20 ], [ 30, 50 ], [ 60, 100 ]],
-//           fill: 'red'
-//     }} />
-//         <polyline style={{ points: [[ 30, 30 ], [ 40, 20 ], [ 60, 100 ]] }} />
-//         </rect>
-// `
-// )
+G6.registerCombo('listCombo', ListCombo, 'rect')
 const { create, get, update } = window.api
 
 const data = {
@@ -154,12 +135,10 @@ const Main = () => {
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
       const nodes = res[0].map(noteToNode).concat([
         {
-          id: 'listNode',
-          type: 'ListNode'
-        },
-        {
-          id: 'rect-xml',
-          type: 'rect-xml'
+          id: '这是列表的第一条笔记',
+          comboId: 'listCombo1',
+          type: 'ListNode',
+          order: 1
         }
       ])
       const edges = res[1].map(relationToEdge)
@@ -169,7 +148,14 @@ const Main = () => {
       G6.Util.processParallelEdges(edges)
       graph.data({
         nodes,
-        edges
+        edges,
+        combos: [
+          {
+            type: 'listCombo',
+            id: 'listCombo1',
+            label: 'listCombo1'
+          }
+        ]
       })
       graph.render()
       graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)

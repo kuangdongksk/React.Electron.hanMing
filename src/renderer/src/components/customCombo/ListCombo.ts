@@ -1,11 +1,13 @@
-import { ModelConfig } from '@antv/g6'
+import { IGroup, ModelConfig } from '@antv/g6'
 import { ECyan } from '@renderer/constant/color'
 
-export default (cfg: ModelConfig) => `
+export default {
+  jsx: (cfg: ModelConfig, group: IGroup) => `
     <Group>
       <Rect
         style={{
           radius: [2],
+          fill: '#ffffff00',
           stroke: ${ECyan.Brightest},
           lineWidth: '1',
           flexDirection: 'row',
@@ -13,9 +15,7 @@ export default (cfg: ModelConfig) => `
         }}
         draggable
         keyshape
-      >
-        <Text style={{ fill: ${ECyan.Brightest} }}>${cfg.order}</Text>
-        <Text style={{ fill: ${ECyan.Brightest} }}>${cfg.id}</Text>
-      </Rect>
+      />
     </Group>
-`
+  `
+}

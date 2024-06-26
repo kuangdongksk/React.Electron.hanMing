@@ -1,39 +1,23 @@
 // import G6 from '@antv/g6'
 import { Group, Rect, Text } from '@antv/g6-react-node'
+import { ECyan } from '@renderer/constant/color'
 
 export const List = (cfg) => {
   return (
     <Group>
       <Rect
         style={{
-          radius: [8],
-          shadowColor: '#ddd',
-          shadowBlur: 8,
-          shadowOffsetX: 2,
-          shadowOffsetY: 2
+          radius: [2],
+          stroke: ECyan.Brightest,
+          lineWidth: '1',
+          flexDirection: 'row',
+          display: 'flex'
         }}
         draggable
         keyshape
       >
-        <Rect
-          style={{
-            minWidth: 200,
-            shadowColor: 'l(0) 0:#0049FF 1:#0EB7FF',
-            radius: [8],
-            padding: 12,
-            flexDirection: 'row',
-            cursor: 'pointer',
-            alignContent: 'center'
-          }}
-        >
-          <Circle
-            style={{
-              fill: '#00CF10'
-            }}
-          />
-          <Rect style={{ flex: 1 }} />
-          <Text>{cfg.id}</Text>
-        </Rect>
+        <Text style={{ fill: ECyan.Brightest }}>${cfg.order}</Text>
+        <Text style={{ fill: ECyan.Brightest }}>${cfg.id}</Text>
       </Rect>
     </Group>
   )

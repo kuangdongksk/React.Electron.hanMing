@@ -18,27 +18,22 @@ export function noteToNode(note: note): NodeConfig {
   return {
     id: note.id,
     label: note.content,
-    x: attributes.x,
-    y: attributes.y
+    ...attributes
   }
 }
 
-export function formToNote(formValue:{
-  content:string,
-  x:number,
-  y:number
-}):note{
+export function formToNote(formValue: { content: string; x: number; y: number }): note {
   const id = nanoid()
   return {
     id,
-    noteId:id,
-    content:formValue.content,
-    attributes:JSON.stringify({
-      x:formValue.x,
-      y:formValue.y
+    noteId: id,
+    content: formValue.content,
+    attributes: JSON.stringify({
+      x: formValue.x,
+      y: formValue.y
     }),
-    tag:'',
-    relations:''
+    tag: '',
+    relations: ''
   }
 }
 
