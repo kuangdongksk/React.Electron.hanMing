@@ -19,7 +19,6 @@ model note {
   id                               String       @id
   noteId                           String       @default("no data")
   content                          String       @default("空")
-  tag                              String       @default("[]")
   attributes                       String       @default("{}")
   mapTagNote_mapTagNote_noteTonote mapTagNote[] @relation("mapTagNote_noteTonote")
   relation_relation_targetTonote   relation[]   @relation("relation_targetTonote")
@@ -38,11 +37,13 @@ model relation {
 }
 
 model relationType {
-  id       String     @id
-  name     String     @default("unNamed")
-  style    String     @default("{}")
-  children String     @default("[]")
-  relation relation[]
+  id                 String         @id
+  name               String         @default("unNamed")
+  style              String         @default("{}")
+  parent             String         @default("[]")
+  relation           relation[]
+  relationType       relationType   @relation("relationTypeTorelationType", fields: [parent], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_relationType relationType[] @relation("relationTypeTorelationType")
 }
 
 model tag {
