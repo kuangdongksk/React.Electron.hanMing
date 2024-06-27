@@ -1,42 +1,9 @@
-import G6, { GraphOptions, ModelStyle } from '@antv/g6'
+import { GraphOptions } from '@antv/g6'
+import { ComboStyle } from '@antv/g6/lib/spec/element/combo'
+import { EdgeStyle } from '@antv/g6/lib/spec/element/edge'
+import { NodeStyle } from '@antv/g6/lib/spec/element/node'
 import { ERed, ETeal } from '@renderer/constant/color'
 import { TBooleanStateName } from '@renderer/types/graph/state'
-//#region 插件
-const menu = new G6.Menu({
-  getContent(e) {
-    const outDiv = document.createElement('div')
-    outDiv.style.width = '180px'
-    outDiv.innerHTML = `<ul>
-        <li>测试01</li>
-        <li>测试01</li>
-        <li>测试01</li>
-        <li>测试01</li>
-        <li>测试01</li>
-      </ul>`
-    return outDiv
-  },
-  handleMenuClick(target, item) {
-    console.log(target, item)
-  },
-  itemTypes: ['node']
-})
-const tooltip = new G6.Tooltip({
-  offsetX: 10,
-  offsetY: 20,
-  getContent(e) {
-    const outDiv = document.createElement('div')
-    outDiv.style.width = '180px'
-    if (e?.item) {
-      outDiv.innerHTML = `
-      <ul>
-        <li>Label: ${e.item.getModel().label || e.item.getModel().id}</li>
-      </ul>`
-    }
-    return outDiv
-  },
-  itemTypes: ['node']
-})
-//#endregion
 
 //#region 样式
 //#region 默认样式
@@ -46,7 +13,7 @@ const defaultNode: Partial<{
   size: number | number[]
   color: string
 }> &
-  ModelStyle = {
+  NodeStyle = {
   size: 5,
   style: {
     stroke: ETeal.Brighter,
@@ -55,7 +22,6 @@ const defaultNode: Partial<{
     shadowColor: ETeal.Brightest,
     shadowBlur: 10
   },
-  label: 'id',
   labelCfg: {
     position: 'bottom',
     style: {
@@ -69,18 +35,16 @@ const defaultEdge: Partial<{
   size: number | number[]
   color: string
 }> &
-  ModelStyle = {
+  EdgeStyle = {
   type: 'cubic-vertical',
   size: 1,
   style: {
     lineWidth: 0.5,
     shadowColor: ETeal.Brightest,
     shadowBlur: 10,
-    endArrow: {
-      path: G6.Arrow.vee(5, 10, 0)
-    }
+    endArrow: true,
+    endArrowType: 'vee'
   },
-  label: 'id',
   labelCfg: {
     position: 'bottom',
     style: {
@@ -94,7 +58,7 @@ const defaultCombo: Partial<{
   size: number | number[]
   color: string
 }> &
-  ModelStyle = {
+  ComboStyle = {
   style: {
     stroke: ETeal.Brighter,
     strokeOpacity: 0.5,
@@ -104,7 +68,6 @@ const defaultCombo: Partial<{
     fill: ETeal.Brightest,
     fillOpacity: 0.1
   },
-  label: 'id',
   labelCfg: {
     style: {
       fill: ETeal.Brighter,
@@ -146,8 +109,32 @@ const comboStateStyles: { [key in TBooleanStateName]: {} } = {
 
 export default {
   container: '',
-  fitView: true,
-  plugins: [menu, tooltip],
+  autoFit: 'view',
+  plugins: [
+    {
+      key: 'menu',
+      type: 'Contextmenu',
+      /* 返回菜单的内容，支持 Promise 类型的返回值，也可以使用 getItems 进行快捷配置 */
+      getContent: () => {}
+    },
+    {
+      key: 'tooltip',
+      type: 'tooltip'
+    }
+  ],
+  node: {
+    style: defaultNode,
+    state: nodeStateStyles
+  },
+  edge: {
+    style: defaultEdge,
+    state: edgeStateStyles
+  },
+  combo: {
+    style: defaultCombo,
+    state: comboStateStyles
+  },
+  zoomRange: [0.5, 2],
   modes: {
     default: [
       //#region 画布事件
@@ -185,11 +172,5 @@ export default {
         // enableDebounce: true
       }
     ]
-  },
-  defaultNode,
-  defaultEdge,
-  defaultCombo,
-  nodeStateStyles,
-  edgeStateStyles,
-  comboStateStyles
+  }
 } as GraphOptions

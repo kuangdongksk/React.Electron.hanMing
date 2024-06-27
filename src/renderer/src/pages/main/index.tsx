@@ -1,5 +1,14 @@
-import G6, { EdgeConfig, Graph, IG6GraphEvent, INode, NodeConfig } from '@antv/g6'
-// import { createNodeFromReact } from '@antv/g6-react-node'
+import {
+  EdgeData,
+  ExtensionCategory,
+  Graph,
+  IDragEvent,
+  IPointerEvent,
+  Node,
+  NodeData,
+  register
+} from '@antv/g6'
+import { ReactNode } from '@antv/g6-extension-react'
 import { Bool } from '@renderer/constant/base'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import {
@@ -8,23 +17,18 @@ import {
   relationToEdge,
   stringArrayToObj
 } from '@renderer/tools/graph/transData'
-import { promiseAddTip } from '@renderer/util/function/requeest'
 import { useBoolean, useMount, useSetState, useSize, useUnmount } from 'ahooks'
 import { Modal, Spin } from 'antd'
 import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
 import 图配置 from './constant/config'
-import { 图事件列表 } from './constant/event'
-
-import ListNode from '@renderer/components/customNode/ListNode/index'
-// import { List as List2 } from '@renderer/components/customNode/ListNode/index.react'
-import ListCombo from '@renderer/components/customCombo/ListCombo'
+import { onEvent } from './constant/event'
 import './index.less'
 
 //#region 注册自定义组件
 // G6.registerNode('ListNode', createNodeFromReact(List2))
-G6.registerNode('ListNode', ListNode)
-G6.registerCombo('listCombo', ListCombo, 'rect')
+register(ExtensionCategory.NODE, 'react', ReactNode)
+// register(ExtensionCategory.COMBO, ListCombo, ReactNode)
 //#endregion
 
 const { create, get, update } = window.api
@@ -34,8 +38,8 @@ const Main = () => {
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
 
-  const [nodeData, setNodeData] = useSetState<NodeConfig[]>([])
-  const [edgeData, setEdgeData] = useSetState<EdgeConfig[]>([])
+  const [nodeData, setNodeData] = useSetState<NodeData[]>([])
+  const [edgeData, setEdgeData] = useSetState<EdgeData[]>([])
 
   const [isShowForm, { setTrue: setShowForm, setFalse: setHideForm }] = useBoolean(false)
   const [isLoading, { setTrue: setLoading, setFalse: setLoadEnd }] = useBoolean(false)
@@ -47,71 +51,52 @@ const Main = () => {
     })
 
   //#region 事件
-  const handleCanvasDblClick = (e: IG6GraphEvent) => {
+  const handleCanvasDblClick = (e: IPointerEvent) => {
     const position = {
       x: Math.floor(e.canvasX),
       y: Math.floor(e.canvasY)
     }
     setCanvasDblClickPositionOnCanvas(position)
 
-    const node = graph.findById('isShowForm')
+    const node = graph.getNodeData('isShowForm')
     const nodeState = stringArrayToObj<{
       isShowForm: Bool
-    }>(node?.getStates())
+    }>(node?.states ?? [])
 
     if (nodeState.isShowForm === Bool.FALSE) {
       setShowForm()
-      graph.setItemState('isShowForm', 'isShowForm', Bool.TRUE)
+      graph.setElementState('isShowForm', 'isShowForm')
     } else {
       setHideForm()
-      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
+      graph.setElementState('isShowForm', 'isShowForm')
     }
   }
 
   //#region node事件
-  const handleNodeDragend = (e: IG6GraphEvent) => {
-    const item = e.item! as INode
-    if (item.getID()) {
-      get.getNoteById(item.getID()).then((res) => {
-        const attributesString = res?.attributes
-        const attributes = attributesString ? JSON.parse(attributesString) : {}
-        promiseAddTip(
-          update.updateNoteById(item.getID(), {
-            attributes: JSON.stringify({
-              ...attributes,
-              x: Math.floor(item.getModel().x!),
-              y: Math.floor(item.getModel().y!)
-            })
-          })
-        )
-      })
-    }
+  const handleNodeDragend = (e: IDragEvent) => {
+    const item = e.target! as unknown as Node
   }
 
-  const handleNodeContextmenu = (e: IG6GraphEvent) => {
-    console.log(e)
-  }
   //#endregion
   //#endregion
 
   const bindEvents = () => {
-    图事件列表.forEach(({ eventName, callback, once }) => {
-      graph.on(eventName, callback, once)
+    onEvent.forEach(({ eventName, callback }) => {
+      graph.on(eventName, callback)
     })
     graph.on('node:dragend', handleNodeDragend)
     graph.on('canvas:dblclick', handleCanvasDblClick)
-    graph.on('node:contextmenu', handleNodeContextmenu)
   }
 
   //#region 初始化
   const initGraph = () => {
     if (!graph) {
-      graph = new G6.Graph({
+      graph = new Graph({
         ...图配置,
         container: graphRef.current!
       })
 
-      graph.data({ nodes: [], edges: [], combos: [] })
+      graph.setData({ nodes: [], edges: [], combos: [] })
       graph.render()
       bindEvents()
     }
@@ -134,8 +119,8 @@ const Main = () => {
       setNodeData(nodes)
       setEdgeData(edges)
 
-      G6.Util.processParallelEdges(edges)
-      graph.data({
+      // G6.Util.processParallelEdges(edges)
+      graph.setData({
         nodes,
         edges,
         combos: [
@@ -147,7 +132,7 @@ const Main = () => {
         ]
       })
       graph.render()
-      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
+      graph.setElementState('isShowForm', 'isShowForm')
       setLoadEnd()
     })
   }
@@ -158,7 +143,7 @@ const Main = () => {
     create.createNote(formToNote(values)).then((_res) => {
       fetchData()
       setHideForm()
-      graph.setItemState('isShowForm', 'isShowForm', Bool.FALSE)
+      graph.setElementState('isShowForm', 'isShowForm')
     })
   }
   //#endregion
@@ -181,7 +166,7 @@ const Main = () => {
 
   useEffect(() => {
     if (size && graph) {
-      graph.changeSize(size.width, size.height)
+      graph.setSize(size.width, size.height)
     }
   }, [size?.height, size?.width])
 

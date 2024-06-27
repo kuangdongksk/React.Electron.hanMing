@@ -1,10 +1,8 @@
-import { G6Event, IG6GraphEvent } from '@antv/g6'
-import { setBooleanState } from '@renderer/tools/graph/items'
+import { IEvent } from '@antv/g6'
 
-export const 图事件列表: {
-  eventName: G6Event
-  callback: (e: IG6GraphEvent) => void
-  once?: boolean
+export const onEvent: {
+  eventName: string
+  callback: (e: IEvent) => void
 }[] = [
   //#region 通用事件
   // {
@@ -15,15 +13,6 @@ export const 图事件列表: {
   // },
   //#endregion
   //#region 节点事件
-  {
-    eventName: 'node:click',
-    callback: (e) => {
-      const item = e.item
-      if (item) {
-        setBooleanState(item, 'selected')
-      }
-    }
-  },
   {
     eventName: 'node:hover',
     callback: (e) => {
