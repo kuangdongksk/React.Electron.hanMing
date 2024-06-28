@@ -1,11 +1,11 @@
 import { message } from 'antd'
 
-export function promiseAddTip<Res, Err>(
+export function promiseWidthTip<Res, Err>(
   promise: Promise<Res>,
   onSuccess?: (res: Res) => void,
   onFail?: (err: Err) => void,
   successTip: string = '操作成功',
-  failTip = '操作失败'
+  failTip: string = '操作失败'
 ) {
   promise
     .then((res: Res) => {

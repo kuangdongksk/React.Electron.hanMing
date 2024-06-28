@@ -18,6 +18,7 @@ model mapTagNote {
 model note {
   id                               String       @id
   noteId                           String       @default("no data")
+  style                            String       @default("{}")
   content                          String       @default("空")
   attributes                       String       @default("{}")
   mapTagNote_mapTagNote_noteTonote mapTagNote[] @relation("mapTagNote_noteTonote")
@@ -29,6 +30,7 @@ model relation {
   id                         String       @id
   name                       String       @default("undefind")
   type                       String       @default("")
+  style                      String       @default("{}")
   source                     String       @default("undefind")
   target                     String       @default("undefind")
   note_relation_targetTonote note         @relation("relation_targetTonote", fields: [target], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -39,7 +41,7 @@ model relation {
 model relationType {
   id                 String         @id
   name               String         @default("unNamed")
-  style              String         @default("{}")
+  define             String         @default("{}")
   parent             String         @default("[]")
   relation           relation[]
   relationType       relationType   @relation("relationTypeTorelationType", fields: [parent], references: [id], onDelete: NoAction, onUpdate: NoAction)

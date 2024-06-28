@@ -8,12 +8,7 @@ import { TBooleanStateName } from '@renderer/types/graph/state'
 //#region 样式
 //#region 默认样式
 //https://g6.antv.antgroup.com/manual/middle/elements/nodes/default-node
-const defaultNode: Partial<{
-  type: string
-  size: number | number[]
-  color: string
-}> &
-  NodeStyle = {
+const defaultNode: NodeStyle = {
   size: 5,
   style: {
     stroke: ETeal.Brighter,
@@ -124,7 +119,8 @@ export default {
     }
   ],
   node: {
-    style: defaultNode,
+    type: 'circle',
+    style: { ...defaultNode, label: true, labelText: (d) => d.data?.label },
     state: nodeStateStyles
   },
   edge: {
@@ -135,7 +131,7 @@ export default {
     style: defaultCombo,
     state: comboStateStyles
   },
-  zoomRange: [0.5, 2],
+  zoomRange: [0.25, 4],
   modes: {
     default: [
       //#region 画布事件
@@ -173,5 +169,18 @@ export default {
         // enableDebounce: true
       }
     ]
-  }
+  },
+  behaviors: [
+    'drag-canvas',
+    'zoom-canvas',
+    {
+      type: 'click-select',
+      multiple: true,
+      trigger: ['shift']
+    },
+    {
+      type: 'drag-element'
+    }
+  ],
+  transforms: ['process-parallel-edges']
 } as GraphOptions

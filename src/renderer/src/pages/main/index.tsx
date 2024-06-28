@@ -1,14 +1,13 @@
 import {
-  EdgeData,
+  CanvasEvent,
   ExtensionCategory,
   Graph,
-  IDragEvent,
+  IElementEvent,
   IPointerEvent,
-  Node,
-  NodeData,
+  NodeEvent,
   register
 } from '@antv/g6'
-import { ReactNode } from '@antv/g6-extension-react'
+import ListNode from '@renderer/components/customNode/ListNode'
 import { Bool } from '@renderer/constant/base'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import {
@@ -17,6 +16,7 @@ import {
   relationToEdge,
   stringArrayToObj
 } from '@renderer/tools/graph/transData'
+import { promiseWidthTip } from '@renderer/util/function/requeest'
 import { useBoolean, useMount, useSetState, useSize, useUnmount } from 'ahooks'
 import { Modal, Spin } from 'antd'
 import { useEffect, useRef } from 'react'
@@ -27,21 +27,18 @@ import useMainStyles from './index.style'
 
 //#region 注册自定义组件
 // G6.registerNode('ListNode', createNodeFromReact(List2))
-register(ExtensionCategory.NODE, 'react', ReactNode)
+register(ExtensionCategory.NODE, 'ListNode', ListNode)
 // register(ExtensionCategory.COMBO, ListCombo, ReactNode)
 //#endregion
 
 const { create, get, update } = window.api
 
 let graph: Graph
-const Main = () => {
+export default function Main() {
   const { styles } = useMainStyles()
 
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
-
-  const [nodeData, setNodeData] = useSetState<NodeData[]>([])
-  const [edgeData, setEdgeData] = useSetState<EdgeData[]>([])
 
   const [isShowForm, { setTrue: setShowForm, setFalse: setHideForm }] = useBoolean(false)
   const [isLoading, { setTrue: setLoading, setFalse: setLoadEnd }] = useBoolean(false)
@@ -61,6 +58,7 @@ const Main = () => {
     setCanvasDblClickPositionOnCanvas(position)
 
     const node = graph.getNodeData('isShowForm')
+    console.log(node)
     const nodeState = stringArrayToObj<{
       isShowForm: Bool
     }>(node?.states ?? [])
@@ -75,8 +73,17 @@ const Main = () => {
   }
 
   //#region node事件
-  const handleNodeDragend = (e: IDragEvent) => {
-    const item = e.target! as unknown as Node
+  const handleNodeDragend = (e: IElementEvent) => {
+    console.log(e)
+    const node = e.target
+    promiseWidthTip(
+      update.updateNoteById(node.id, {
+        style: JSON.stringify({ x: node.attributes.x, y: node.attributes.y })
+      }),
+      (res) => {
+        graph.updateNodeData([noteToNode(res)])
+      }
+    )
   }
 
   //#endregion
@@ -86,8 +93,8 @@ const Main = () => {
     onEvent.forEach(({ eventName, callback }) => {
       graph.on(eventName, callback)
     })
-    graph.on('node:dragend', handleNodeDragend)
-    graph.on('canvas:dblclick', handleCanvasDblClick)
+    graph.on(NodeEvent.DRAG_END, handleNodeDragend)
+    graph.on(CanvasEvent.DBLCLICK, handleCanvasDblClick)
   }
 
   //#region 初始化
@@ -119,9 +126,6 @@ const Main = () => {
         }
       ])
       const edges = res[1].map(relationToEdge)
-      setNodeData(nodes)
-      setEdgeData(edges)
-
       // G6.Util.processParallelEdges(edges)
       graph.setData({
         nodes,
@@ -201,4 +205,4 @@ const Main = () => {
     </>
   )
 }
-export default Main
+

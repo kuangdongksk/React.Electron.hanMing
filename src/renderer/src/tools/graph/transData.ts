@@ -12,17 +12,20 @@ export function stringArrayToObj<T>(strArr: string[]): T {
 
 //#region note
 export function noteToNode(note: note): NodeData {
-  const { attributes: attributesStr } = note
+  const { attributes: attributesStr, style, content } = note
 
   const attributes = JSON.parse(attributesStr)
   return {
     id: note.id,
+    type: attributes.type ?? 'circle',
     data: {
+      content,
       ...attributes
     },
     style: {
-      label: note.content,
-      ...attributes
+      label: true,
+      labelText: (d) => d.data?.label,
+      ...JSON.parse(style)
     }
   }
 }
@@ -33,10 +36,11 @@ export function formToNote(formValue: { content: string; x: number; y: number })
     id,
     noteId: id,
     content: formValue.content,
-    attributes: JSON.stringify({
+    style: JSON.stringify({
       x: formValue.x,
       y: formValue.y
-    })
+    }),
+    attributes: JSON.stringify({})
   }
 }
 
