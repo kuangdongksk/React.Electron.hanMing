@@ -23,7 +23,6 @@ import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
 import 图配置 from './constant/config'
 import { onEvent } from './constant/event'
-import './index.less'
 
 //#region 注册自定义组件
 // G6.registerNode('ListNode', createNodeFromReact(List2))
