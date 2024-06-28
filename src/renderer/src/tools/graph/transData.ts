@@ -18,6 +18,9 @@ export function noteToNode(note: note): NodeData {
   return {
     id: note.id,
     data: {
+      ...attributes
+    },
+    style: {
       label: note.content,
       ...attributes
     }

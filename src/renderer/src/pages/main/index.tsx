@@ -23,6 +23,7 @@ import { useEffect, useRef } from 'react'
 import NoteForm from './components/Form'
 import 图配置 from './constant/config'
 import { onEvent } from './constant/event'
+import useMainStyles from './index.style'
 
 //#region 注册自定义组件
 // G6.registerNode('ListNode', createNodeFromReact(List2))
@@ -34,6 +35,8 @@ const { create, get, update } = window.api
 
 let graph: Graph
 const Main = () => {
+  const { styles } = useMainStyles()
+
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
 
@@ -92,6 +95,7 @@ const Main = () => {
     if (!graph) {
       graph = new Graph({
         ...图配置,
+        height: 100,
         container: graphRef.current!
       })
 
@@ -193,7 +197,7 @@ const Main = () => {
         <NoteForm position={canvasDblClickPositionOnCanvas} onSubmit={onSubmit} />
       </Modal>
       <Spin spinning={isLoading} />
-      <div className="graph" ref={graphRef} onDoubleClick={() => {}}></div>
+      <div className={styles.graph} ref={graphRef} onDoubleClick={() => {}}></div>
     </>
   )
 }

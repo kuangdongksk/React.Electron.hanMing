@@ -109,7 +109,8 @@ const comboStateStyles: { [key in TBooleanStateName]: {} } = {
 
 export default {
   container: '',
-  // autoFit: 'view',
+  autoResize: true,
+  autoFit: 'view',
   plugins: [
     {
       key: 'menu',
