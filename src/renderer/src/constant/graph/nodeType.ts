@@ -1,5 +1,4 @@
 export enum ENodeType {
   Circle = 'circle',
-  List = 'list',
-  Note = 'note'
+  List = 'list'
 }

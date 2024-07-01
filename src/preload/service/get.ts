@@ -1,4 +1,4 @@
-import { note, relation } from '@prisma/client'
+import { note, relation, relationType } from '@prisma/client'
 import { prisma } from '.'
 
 //#region note
@@ -28,3 +28,11 @@ export function getNotesContentIncludeParam(content: string): Promise<note[]> {
 export function getAllRelation(): Promise<relation[]> {
   return prisma.relation.findMany()
 }
+
+//#endregion
+
+//#region 关系类型
+export function getAllRelationType(): Promise<relationType[]> {
+  return prisma.relationType.findMany()
+}
+//#endregion

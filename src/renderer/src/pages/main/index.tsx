@@ -49,8 +49,8 @@ export default function Main() {
   const handleCanvasDblClick = (e: IPointerEvent) => {
     console.log(e)
     const position = {
-      x: Math.floor(e.canvasX),
-      y: Math.floor(e.canvasY)
+      x: Math.floor(e.canvas.x),
+      y: Math.floor(e.canvas.y)
     }
     setCanvasDblClickPositionOnCanvas(position)
 
@@ -65,8 +65,10 @@ export default function Main() {
       update.updateNoteById(node.id, {
         style: JSON.stringify({ x: node.attributes.x, y: node.attributes.y })
       }),
-      (res) => {
-        graph.updateNodeData([noteToNode(res)])
+      {
+        onSuccess: (res) => {
+          graph.updateNodeData([noteToNode(res)])
+        }
       }
     )
   }
@@ -152,10 +154,11 @@ export default function Main() {
   return (
     <>
       <Modal
+        closable={false}
+        destroyOnClose
+        footer={null}
         mask
         maskClosable
-        closable={false}
-        footer={null}
         open={isShowForm}
         onCancel={setHideForm}
         style={{

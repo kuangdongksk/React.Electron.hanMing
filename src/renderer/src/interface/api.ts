@@ -1,4 +1,4 @@
-import { note, relation } from '@prisma/client'
+import { note, relation, relationType } from '@prisma/client'
 
 export interface IApi {
   create: {
@@ -9,6 +9,7 @@ export interface IApi {
     getNoteById: (id: string) => Promise<note | null>
     getNotesContentIncludeParam: (content: string) => Promise<note[]>
     getAllRelation: () => Promise<relation[]>
+    getAllRelationType: () => Promise<relationType[]>
   }
   update: {
     updateNoteById: (id: string, data: Partial<note>) => Promise<note>

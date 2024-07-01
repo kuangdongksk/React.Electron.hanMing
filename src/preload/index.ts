@@ -3,7 +3,13 @@ import { note } from '@prisma/client'
 import { contextBridge } from 'electron'
 import { IApi } from '../renderer/src/interface/api'
 import { createNote } from './service/create'
-import { getAllNote, getAllRelation, getNoteById, getNotesContentIncludeParam } from './service/get'
+import {
+  getAllNote,
+  getAllRelation,
+  getAllRelationType,
+  getNoteById,
+  getNotesContentIncludeParam
+} from './service/get'
 import { updateNoteById } from './service/update'
 
 // Custom APIs for renderer
@@ -30,6 +36,11 @@ const api: IApi = {
 
     getAllRelation: async () => {
       const res = await getAllRelation()
+      return res
+    },
+
+    getAllRelationType: async () => {
+      const res = await getAllRelationType()
       return res
     }
   },

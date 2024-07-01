@@ -2,18 +2,24 @@ import { message } from 'antd'
 
 export function promiseWidthTip<Res, Err>(
   promise: Promise<Res>,
-  onSuccess?: (res: Res) => void,
-  onFail?: (err: Err) => void,
-  successTip: string = '操作成功',
-  failTip: string = '操作失败'
+  success?: {
+    successTip?: string
+    onSuccess?: (res: Res) => void
+  },
+  fail?: {
+    failTip?: string
+    onFail?: (err: Err) => void
+  }
 ) {
   promise
     .then((res: Res) => {
+      const { successTip, onSuccess } = success || {}
       onSuccess && onSuccess(res)
-      message.success(successTip)
+      successTip && message.success(successTip)
     })
     .catch((err: Err) => {
+      const { failTip, onFail } = fail || {}
       onFail && onFail(err)
-      message.error(failTip)
+      failTip && message.error(failTip)
     })
 }
