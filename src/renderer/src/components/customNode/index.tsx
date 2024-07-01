@@ -1,13 +1,7 @@
-import { Node, NodeOptions } from '@antv/g6'
-import ListNode from './ListNode'
-import CircleNode from './CircleNode'
 import { NodeStyle } from '@antv/g6/lib/spec/element/node'
-
-export enum ENodeType {
-  Circle = 'circle',
-  List = 'list',
-  Note = 'note'
-}
+import { ENodeType } from '@renderer/constant/graph/nodeType'
+import CircleNode from './CircleNode'
+import ListNode from './ListNode'
 
 export interface INodeMapProps {
   data: {

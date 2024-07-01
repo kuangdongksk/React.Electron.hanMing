@@ -47,25 +47,14 @@ export default function Main() {
 
   //#region 事件
   const handleCanvasDblClick = (e: IPointerEvent) => {
+    console.log(e)
     const position = {
       x: Math.floor(e.canvasX),
       y: Math.floor(e.canvasY)
     }
     setCanvasDblClickPositionOnCanvas(position)
 
-    const node = graph.getNodeData('isShowForm')
-    console.log(node)
-    const nodeState = stringArrayToObj<{
-      isShowForm: Bool
-    }>(node?.states ?? [])
-
-    if (nodeState.isShowForm === Bool.FALSE) {
-      setShowForm()
-      graph.setElementState('isShowForm', 'isShowForm')
-    } else {
-      setHideForm()
-      graph.setElementState('isShowForm', 'isShowForm')
-    }
+    setShowForm()
   }
 
   //#region node事件
@@ -91,6 +80,9 @@ export default function Main() {
     })
     graph.on(NodeEvent.DRAG_END, handleNodeDragend)
     graph.on(CanvasEvent.DBLCLICK, handleCanvasDblClick)
+    // graph.on(CanvasEvent.POINTER_DOWN, (e) => {
+    //   console.log(e)
+    // })
   }
 
   //#region 初始化
@@ -115,22 +107,11 @@ export default function Main() {
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
       const nodes = res[0].map(noteToNode)
       const edges = res[1].map(relationToEdge)
-      // G6.Util.processParallelEdges(edges)
       graph.setData({
         nodes,
-        edges,
-        combos: [
-          {
-            type: 'react',
-            id: 'listCombo1',
-            style: {
-              component: (data) => <ListCombo data={data} />
-            }
-          }
-        ]
+        edges
       })
       graph.render()
-      graph.setElementState('isShowForm', 'isShowForm')
       setLoadEnd()
     })
   }
