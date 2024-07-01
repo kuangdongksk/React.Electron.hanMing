@@ -7,7 +7,10 @@ import {
   NodeEvent,
   register
 } from '@antv/g6'
-import ListNode from '@renderer/components/customNode/ListNode'
+import { ReactNode } from '@antv/g6-extension-react'
+import ListCombo from '@renderer/components/customCombo/ListCombo'
+// import ListNode from '@renderer/components/customNode/ListNode'
+import DemoNote from '@renderer/components/customNode/demo'
 import { Bool } from '@renderer/constant/base'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import {
@@ -27,14 +30,15 @@ import useMainStyles from './index.style'
 
 //#region 注册自定义组件
 // G6.registerNode('ListNode', createNodeFromReact(List2))
-register(ExtensionCategory.NODE, 'ListNode', ListNode)
-// register(ExtensionCategory.COMBO, ListCombo, ReactNode)
+
+// register(ExtensionCategory.COMBO, 'react', ReactNode)
 //#endregion
 
 const { create, get, update } = window.api
 
 let graph: Graph
 export default function Main() {
+  register(ExtensionCategory.NODE, 'react', ReactNode)
   const { styles } = useMainStyles()
 
   const graphRef = useRef<HTMLDivElement>(null)
@@ -119,10 +123,27 @@ export default function Main() {
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
       const nodes = res[0].map(noteToNode).concat([
         {
+          id: 'local-server-1',
+          type: 'react',
+          data: { status: 'success', type: 'local', url: 'http://localhost:3000' },
+          style: {
+            x: 50,
+            y: 50,
+            component: (data) => <DemoNote data={data} onChange={() => {}} />,
+            fill: 'red'
+          }
+        },
+        {
           id: '这是列表的第一条笔记',
-          comboId: 'listCombo1',
-          type: 'ListNode',
-          order: 1
+          // comboId: 'listCombo1',
+          type: 'react',
+          style: {
+            x: 100,
+            y: 100,
+            size: [100, 100],
+            component: (data) => <DemoNote data={data} onChange={() => {}} />,
+            fill: 'red'
+          }
         }
       ])
       const edges = res[1].map(relationToEdge)
@@ -132,9 +153,11 @@ export default function Main() {
         edges,
         combos: [
           {
-            type: 'listCombo',
+            type: 'react',
             id: 'listCombo1',
-            label: 'listCombo1'
+            style: {
+              component: (data) => <ListCombo data={data} />
+            }
           }
         ]
       })

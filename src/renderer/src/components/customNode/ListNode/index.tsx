@@ -1,9 +1,9 @@
-export const ListNode = (cfg) => {
+export default function ListNode({ data }) {
+  console.log(data)
   return (
     <div>
-      <span>${cfg.order}</span>
-      <span>${cfg.id}</span>
+      <span>${data.order}</span>
+      <span>${data.id}</span>
     </div>
   )
 }
-export default ListNode
