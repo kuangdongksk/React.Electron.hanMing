@@ -9,8 +9,6 @@ import {
 } from '@antv/g6'
 import { ReactNode } from '@antv/g6-extension-react'
 import ListCombo from '@renderer/components/customCombo/ListCombo'
-// import ListNode from '@renderer/components/customNode/ListNode'
-import DemoNote from '@renderer/components/customNode/demo'
 import { Bool } from '@renderer/constant/base'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import {
@@ -27,12 +25,6 @@ import NoteForm from './components/Form'
 import 图配置 from './constant/config'
 import { onEvent } from './constant/event'
 import useMainStyles from './index.style'
-
-//#region 注册自定义组件
-// G6.registerNode('ListNode', createNodeFromReact(List2))
-
-// register(ExtensionCategory.COMBO, 'react', ReactNode)
-//#endregion
 
 const { create, get, update } = window.api
 
@@ -121,31 +113,7 @@ export default function Main() {
   const fetchData = () => {
     setLoading()
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
-      const nodes = res[0].map(noteToNode).concat([
-        {
-          id: 'local-server-1',
-          type: 'react',
-          data: { status: 'success', type: 'local', url: 'http://localhost:3000' },
-          style: {
-            x: 50,
-            y: 50,
-            component: (data) => <DemoNote data={data} onChange={() => {}} />,
-            fill: 'red'
-          }
-        },
-        {
-          id: '这是列表的第一条笔记',
-          // comboId: 'listCombo1',
-          type: 'react',
-          style: {
-            x: 100,
-            y: 100,
-            size: [100, 100],
-            component: (data) => <DemoNote data={data} onChange={() => {}} />,
-            fill: 'red'
-          }
-        }
-      ])
+      const nodes = res[0].map(noteToNode)
       const edges = res[1].map(relationToEdge)
       // G6.Util.processParallelEdges(edges)
       graph.setData({

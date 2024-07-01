@@ -1,47 +1,31 @@
-import { DatabaseFilled } from '@ant-design/icons'
-import { Badge, Flex, Input, Tag, Typography } from 'antd'
-const { Text } = Typography
+import { Node, NodeOptions } from '@antv/g6'
+import ListNode from './ListNode'
+import CircleNode from './CircleNode'
+import { NodeStyle } from '@antv/g6/lib/spec/element/node'
 
-const Node = ({ data, onChange }) => {
-  console.log(data)
-  const { status, type } = data.data
-
-  return (
-    <Flex
-      style={{
-        width: '100%',
-        height: '100%',
-        background: '#fff',
-        padding: 10,
-        borderRadius: 5,
-        border: '1px solid gray'
-      }}
-      vertical
-    >
-      <Flex align="center" justify="space-between">
-        <Text>
-          <DatabaseFilled />
-          Server
-          <Tag>{type}</Tag>
-        </Text>
-        <Badge status={status} />
-      </Flex>
-      <Text type="secondary">{data.id}</Text>
-      <Flex align="center">
-        <Text style={{ flexShrink: 0 }}>
-          <Text type="danger">*</Text>URL:
-        </Text>
-        <Input
-          style={{ borderRadius: 0, borderBottom: '1px solid #d9d9d9' }}
-          variant="borderless"
-          value={data.data?.url}
-          onChange={(event) => {
-            const url = event.target.value
-            onChange?.(url)
-          }}
-        />
-      </Flex>
-    </Flex>
-  )
+export enum ENodeType {
+  Circle = 'circle',
+  List = 'list',
+  Note = 'note'
 }
-export default Node
+
+export interface INodeMapProps {
+  data: {
+    data: any
+    id: string
+    style: NodeStyle
+    type: ENodeType
+  }
+}
+
+const NodeMap = (props: INodeMapProps) => {
+  const { data } = props
+  const { type } = data
+  const map = {
+    [ENodeType.Circle]: <CircleNode data={data} />,
+    [ENodeType.List]: <ListNode data={data} />
+  }
+
+  return map[type]
+}
+export default NodeMap

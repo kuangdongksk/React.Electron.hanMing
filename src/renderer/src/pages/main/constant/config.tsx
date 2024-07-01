@@ -1,7 +1,7 @@
 import { GraphOptions } from '@antv/g6'
 import { ComboStyle } from '@antv/g6/lib/spec/element/combo'
 import { EdgeStyle } from '@antv/g6/lib/spec/element/edge'
-import { NodeStyle } from '@antv/g6/lib/spec/element/node'
+import { NodeOptions, NodeStyle } from '@antv/g6/lib/spec/element/node'
 import DemoNote from '@renderer/components/customNode/demo'
 import { ERed, ETeal } from '@renderer/constant/color'
 import { TBooleanStateName } from '@renderer/types/graph/state'
@@ -125,7 +125,7 @@ export default {
       ...defaultNode,
       label: true,
       labelText: (d) => d.data?.label,
-      component: (data) => <DemoNote data={data} onChange={() => {}} />
+      component: (data: any) => <DemoNote data={data} />
     },
     state: nodeStateStyles
   },
