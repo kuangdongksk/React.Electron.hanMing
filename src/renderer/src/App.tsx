@@ -1,5 +1,5 @@
 import { useToggle } from 'ahooks'
-import { Button } from 'antd'
+import { Button, Layout } from 'antd'
 import { ThemeProvider } from 'antd-style'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
@@ -31,21 +31,21 @@ function App(): JSX.Element {
 
   return (
     <ThemeProvider appearance={appearance} theme={getTheme(appearance)}>
-      <div className="bg-[#4a4a4a] text-[#ffcdcd] flex flex-col h-screen">
+      <Layout className={styles.app}>
         <nav className={styles.nav}>
           <NavLink to="main">画布</NavLink>
         </nav>
 
         {/* <!-- 头部 --> */}
-        <header className="bg-[#525252] flex-1 flex">
+        <Layout.Header className="bg-[#525252] flex-1 flex">
           <div className="pl-[8em]">{location.pathname.split('/')[1]}</div>
           <div className="flex-1"></div>
           <span onClick={toggleAppearance}>{appearance}</span>
           <div className="pr-[2em]">{now}</div>
-        </header>
+        </Layout.Header>
 
         {/* <!-- 主体 --> */}
-        <div className="flex overflow-auto flex-[18]">
+        <Layout.Content className="flex overflow-auto flex-[18]">
           {/* <!-- 主体.左边 --> */}
           <div className="bg-[#4b515c] flex">
             {/* <!-- 主体.左边.目录 --> */}
@@ -65,16 +65,16 @@ function App(): JSX.Element {
 
           {/* <!-- 主体.右边 --> */}
           <div className="bg-[#4b515c] overflow-auto">右边</div>
-        </div>
+        </Layout.Content>
         {/* <!-- 底部 --> */}
-        <footer className="flex-1 flex">
+        <Layout.Footer className={styles.footer}>
           {/* <!-- 底部.左边 --> */}
           <div className="flex-1">{/* <Versions></Versions> */}</div>
 
           {/* <!-- 底部.右边 --> */}
           <div className="">右边</div>
-        </footer>
-      </div>
+        </Layout.Footer>
+      </Layout>
     </ThemeProvider>
   )
 }
