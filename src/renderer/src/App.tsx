@@ -1,13 +1,13 @@
 import { useBoolean, useToggle } from 'ahooks'
-import { Button, Layout, Switch } from 'antd'
+import { Layout, Switch } from 'antd'
 import { ThemeProvider } from 'antd-style'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom'
 import './App.less'
 import useStyles from './App.style'
-import { DefaultDarkTheme, DefaultLightTheme } from './constant/theme'
 import Versions from './components/Versions'
+import { DefaultDarkTheme, DefaultLightTheme } from './constant/theme'
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -52,15 +52,9 @@ function App(): JSX.Element {
             collapsedWidth="3em"
             collapsed={collapsedLeft}
             onCollapse={toggleCollapsedLeft}
-          >
-            <div className="overflow-auto">
-              <Button className="flex items-center" type="text"></Button>
-            </div>
+          ></Sider>
 
-            <div className="hidden overflow-auto"></div>
-          </Sider>
-
-          <Content className="flex-1 flex flex-col overflow-auto">
+          <Content>
             <Navigate to={'/main'} replace />
             <Outlet />
           </Content>

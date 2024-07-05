@@ -1,17 +1,32 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Electron</title>
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
-    />
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Electron</title>
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:" />
+  <style>
+    *::-webkit-scrollbar {
+      width: '0.2em';
+      height: '0.2em'
+    }
+  
+    *::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.432);
+  
+      &:hover {
+        background-color: rgb(255, 255, 255);
+        transform: 'scale(1.2)'
+      }
+    }
+  </style>
   </head>
 
-  <body style="width: 100vw; height: 100vh">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<body style="width: 100vw; height: 100vh ;margin: 0;padding: 0;">
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
