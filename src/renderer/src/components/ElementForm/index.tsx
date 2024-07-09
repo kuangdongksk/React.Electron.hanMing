@@ -1,41 +1,48 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
 import { I2DCoordinate } from '@renderer/interface/graph'
+import { dbClickPositionAtom } from '@renderer/stores/canvas'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
 import { enumToArray } from '@renderer/util/trans/enum'
-import { Button, Col, Form, Input, Row, Select, Space } from 'antd'
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd'
 import { LabeledValue } from 'antd/es/select'
-import { useState } from 'react'
+import { useAtom } from 'jotai'
+import { useEffect, useState } from 'react'
 export interface NoteFormProps {
-  position: I2DCoordinate
   onSubmit: (values: any) => void
 }
 
 const { get } = window.api
 
 function ElementForm(props: Readonly<NoteFormProps>) {
-  const { position, onSubmit } = props
+  const { onSubmit } = props
+
+  const [form] = Form.useForm()
+
+  const [position] = useAtom<I2DCoordinate>(dbClickPositionAtom)
 
   const [noteOptions, setNoteOptions] = useState<LabeledValue[]>([])
 
+  useEffect(() => {
+    form.setFieldsValue({
+      x: position.x,
+      y: position.y
+    })
+  }, [position])
+
   return (
     <Form
-      initialValues={{
-        x: position.x,
-        y: position.y
-      }}
+      form={form}
       onFinish={(values) => {
         onSubmit(values)
       }}
     >
-      <Space>
-        <Form.Item label="x" name="x">
-          <Input disabled />
-        </Form.Item>
-        <Form.Item label="y" name="y">
-          <Input disabled />
-        </Form.Item>
-      </Space>
+      <Form.Item label="x" name="x">
+        <InputNumber disabled />
+      </Form.Item>
+      <Form.Item label="y" name="y">
+        <InputNumber disabled />
+      </Form.Item>
 
       <Form.Item label="内容" name="content" rules={[{ required: true, message: '请输入内容' }]}>
         <Input />
