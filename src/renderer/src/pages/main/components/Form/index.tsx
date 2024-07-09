@@ -60,7 +60,7 @@ export default function (props: NoteFormProps) {
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name }) => (
-                <Row>
+                <Row key={key}>
                   <Form.Item key={key} name={name} label="目标笔记">
                     <Select
                       showSearch
