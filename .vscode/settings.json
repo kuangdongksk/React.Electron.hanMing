@@ -23,5 +23,6 @@
     "**/src/renderer/src/components/**/index.tsx": "${dirname} 组件",
     "**/src/renderer/src/pages/**/index.tsx": "${dirname} 页面",
     "**/src/renderer/src/style/**/index.less": "${dirname} 页面"
-  }
+  },
+  "cSpell.words": ["Shirnk"]
 }

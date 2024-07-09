@@ -1,7 +1,9 @@
 import { NodeStyle } from '@antv/g6/lib/spec/element/node'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
-import { createStyles } from 'antd-style'
-import { create } from 'domain'
+import useCircleNodeStyles from './index.style'
+import { Flex, Typography } from 'antd'
+
+const { Text } = Typography
 
 export interface CircleNodeProps {
   data: {
@@ -14,16 +16,14 @@ export interface CircleNodeProps {
   }
 }
 
-const useCircleNodeStyles = createStyles({
-  root: {
-    width: 'fit-content',
-    height: 'fit-content',
-    backgroundColor: '#ffe7e775'
-  }
-})
-
 export default function CircleNode(props: Readonly<CircleNodeProps>) {
   const { data } = props
   const { styles } = useCircleNodeStyles()
-  return <div className={styles.root}>{data.data.content}</div>
+  return (
+    <Flex vertical className={styles.root}>
+      <Flex align="center" justify="space-between">
+        <Text>{data.data.content}</Text>
+      </Flex>
+    </Flex>
+  )
 }
