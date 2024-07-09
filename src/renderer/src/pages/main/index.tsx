@@ -8,42 +8,32 @@ import {
   register
 } from '@antv/g6'
 import { ReactNode } from '@antv/g6-extension-react'
-import ListCombo from '@renderer/components/customCombo/ListCombo'
-import { Bool } from '@renderer/constant/base'
-import { I2DCoordinate } from '@renderer/interface/graph'
-import {
-  formToNote,
-  noteToNode,
-  relationToEdge,
-  stringArrayToObj
-} from '@renderer/tools/graph/transData'
+import { dbClickPositionAtom } from '@renderer/stores/canvas'
+import { showRightSidebarAtom } from '@renderer/stores/layout'
+import { noteToNode, relationToEdge } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
-import { useBoolean, useMount, useSetState, useSize, useUnmount } from 'ahooks'
-import { Modal, Spin } from 'antd'
+import { useBoolean, useMount, useSize, useUnmount } from 'ahooks'
+import { Spin } from 'antd'
+import { useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
-import NoteForm from './components/Form'
 import 图配置 from './constant/config'
 import { onEvent } from './constant/event'
 import useMainStyles from './index.style'
 
-const { create, get, update } = window.api
+const { get, update } = window.api
 
 let graph: Graph
 export default function Main() {
   register(ExtensionCategory.NODE, 'react', ReactNode)
   const { styles } = useMainStyles()
 
+  const [_, setShowRightSideBar] = useAtom(showRightSidebarAtom)
+  const [_dbClickPosition, setDbClickPosition] = useAtom(dbClickPositionAtom)
+
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
 
-  const [isShowForm, { setTrue: setShowForm, setFalse: setHideForm }] = useBoolean(false)
   const [isLoading, { setTrue: setLoading, setFalse: setLoadEnd }] = useBoolean(false)
-
-  const [canvasDblClickPositionOnCanvas, setCanvasDblClickPositionOnCanvas] =
-    useSetState<I2DCoordinate>({
-      x: 0,
-      y: 0
-    })
 
   //#region 事件
   const handleCanvasDblClick = (e: IPointerEvent) => {
@@ -52,9 +42,9 @@ export default function Main() {
       x: Math.floor(e.canvas.x),
       y: Math.floor(e.canvas.y)
     }
-    setCanvasDblClickPositionOnCanvas(position)
+    setDbClickPosition(position)
 
-    setShowForm()
+    setShowRightSideBar(true)
   }
 
   //#region node事件
@@ -119,15 +109,6 @@ export default function Main() {
   }
   //#endregion
 
-  //#region 提交表单
-  const onSubmit = (values) => {
-    create.createNote(formToNote(values)).then((_res) => {
-      fetchData()
-      setHideForm()
-      graph.setElementState('isShowForm', 'isShowForm')
-    })
-  }
-  //#endregion
   //#endregion
 
   useMount(() => {
@@ -153,28 +134,6 @@ export default function Main() {
 
   return (
     <>
-      <Modal
-        closable={false}
-        destroyOnClose
-        footer={null}
-        mask
-        maskClosable
-        open={isShowForm}
-        onCancel={setHideForm}
-        style={{
-          backgroundColor: 'transparent'
-        }}
-        styles={{
-          body: {
-            backgroundColor: 'transparent'
-          },
-          mask: {
-            backgroundColor: 'transparent'
-          }
-        }}
-      >
-        <NoteForm position={canvasDblClickPositionOnCanvas} onSubmit={onSubmit} />
-      </Modal>
       <Spin spinning={isLoading} />
       <div className={styles.graph} ref={graphRef} onDoubleClick={() => {}}></div>
     </>

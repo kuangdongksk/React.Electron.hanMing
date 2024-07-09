@@ -62,9 +62,6 @@ const useStyles = createStyles<{}, any>(() => {
     appContent: {
       flex: 1
     },
-    appContentLayout: {
-      height: '100%'
-    },
     appFooter: {
       height: '24px',
       padding: '0',

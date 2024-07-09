@@ -1,4 +1,4 @@
-import App from '@renderer/App'
+import App from '@renderer/app/App'
 import Main from '@renderer/pages/main'
 import { createHashRouter } from 'react-router-dom'
 

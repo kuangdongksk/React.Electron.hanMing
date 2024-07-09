@@ -20,9 +20,10 @@
 
   "workbench.editor.customLabels.enabled": true,
   "workbench.editor.customLabels.patterns": {
-    "**/src/renderer/src/components/**/index.tsx": "${dirname} 组件",
-    "**/src/renderer/src/pages/**/index.tsx": "${dirname} 页面",
-    "**/src/renderer/src/style/**/index.less": "${dirname} 页面"
+    "**/src/components/**/index.tsx": "${dirname} 组件",
+    "**/src/components/**/index.style.ts": "${dirname} 组件style",
+    "**/src/pages/**/index.tsx": "${dirname} 页面",
+    "**/src/pages/**/index.style.ts": "${dirname} 页面style"
   },
   "cSpell.words": ["Shirnk"]
 }

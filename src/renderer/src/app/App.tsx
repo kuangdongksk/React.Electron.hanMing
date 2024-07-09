@@ -1,15 +1,16 @@
-import { useBoolean, useToggle } from 'ahooks'
+import { useToggle } from 'ahooks'
 import { Layout, Switch } from 'antd'
 import { ThemeProvider } from 'antd-style'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
+import Versions from '../components/Versions'
+import { DefaultDarkTheme, DefaultLightTheme } from '../constant/theme'
 import './App.less'
 import useStyles from './App.style'
-import Versions from './components/Versions'
-import { DefaultDarkTheme, DefaultLightTheme } from './constant/theme'
+import MainContent from './components/MainContent'
 
-const { Header, Content, Footer, Sider } = Layout
+const { Header, Footer } = Layout
 
 function App(): JSX.Element {
   const { styles } = useStyles()
@@ -17,9 +18,6 @@ function App(): JSX.Element {
 
   const [now, setNow] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'))
   const [appearance, { toggle: toggleAppearance }] = useToggle<'light', 'dark'>('light', 'dark')
-  const [collapsedLeft, { toggle: toggleCollapsedLeft }] = useBoolean(true)
-  const [collapsedRight, { toggle: toggleCollapsedRight }] = useBoolean(true)
-
   const getTheme = (appearance: 'light' | 'dark') => {
     return appearance === 'light' ? DefaultLightTheme : DefaultDarkTheme
   }
@@ -45,31 +43,7 @@ function App(): JSX.Element {
           <div>{now}</div>
         </Header>
 
-        <Layout className={styles.appContentLayout}>
-          <Sider
-            collapsible
-            trigger={null}
-            collapsedWidth="3em"
-            collapsed={collapsedLeft}
-            onCollapse={toggleCollapsedLeft}
-          ></Sider>
-
-          <Content>
-            <Navigate to={'/main'} replace />
-            <Outlet />
-          </Content>
-
-          <Sider
-            collapsible
-            reverseArrow
-            trigger={null}
-            collapsedWidth="3em"
-            collapsed={collapsedRight}
-            onCollapse={toggleCollapsedRight}
-          >
-            右边
-          </Sider>
-        </Layout>
+        <MainContent />
         <Footer className={styles.appFooter}>
           <div>
             <Versions></Versions>
