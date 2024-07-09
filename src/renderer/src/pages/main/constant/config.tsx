@@ -106,7 +106,6 @@ const comboStateStyles: { [key in TBooleanStateName]: {} } = {
 export default {
   container: '',
   autoResize: true,
-  autoFit: 'view',
   plugins: [
     {
       key: 'menu',
@@ -139,7 +138,12 @@ export default {
   },
   zoomRange: [0.25, 4],
   behaviors: [
-    'drag-canvas',
+    {
+      type: 'drag-canvas'
+    },
+    {
+      type: 'drag-element'
+    },
     {
       key: 'zoom-canvas',
       type: 'zoom-canvas'
@@ -148,9 +152,6 @@ export default {
       type: 'click-select',
       multiple: true,
       trigger: ['shift']
-    },
-    {
-      type: 'drag-element'
     }
   ],
   transforms: ['process-parallel-edges']
