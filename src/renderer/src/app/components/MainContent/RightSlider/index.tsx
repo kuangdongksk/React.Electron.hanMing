@@ -8,7 +8,7 @@ import { dbClickPositionAtom } from '@renderer/stores/canvas'
 import { formToNote } from '@renderer/tools/graph/transData'
 
 const { Sider } = Layout
-const { create, get, update } = window.api
+const { create, get: _get, update: _update } = window.api
 
 function RightSlider() {
   const { styles } = useRightSliderStyle()
@@ -17,7 +17,16 @@ function RightSlider() {
   const [dbClickPosition] = useAtom(dbClickPositionAtom)
 
   return (
-    <Sider collapsible reverseArrow trigger={null} collapsedWidth="0" collapsed={!showRight}>
+    <Sider
+      collapsible
+      reverseArrow
+      trigger={null}
+      collapsedWidth="0"
+      collapsed={!showRight}
+      style={{
+        width: '100em'
+      }}
+    >
       <div className={styles.rightSlideBarCloser}>
         <CloseOutlined
           onClick={() => {
@@ -25,15 +34,12 @@ function RightSlider() {
           }}
         />
       </div>
-      <div>笔记</div>
-      <div>
-        <ElementForm
-          position={dbClickPosition}
-          onSubmit={(values) => {
-            create.createNote(formToNote(values))
-          }}
-        />
-      </div>
+      <ElementForm
+        position={dbClickPosition}
+        onSubmit={(values) => {
+          create.createNote(formToNote(values))
+        }}
+      />
     </Sider>
   )
 }

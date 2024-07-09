@@ -1,16 +1,12 @@
-import { CloseOutlined } from '@ant-design/icons'
-import { showRightSidebarAtom } from '@renderer/stores/layout'
 import { useBoolean } from 'ahooks'
 import { Layout } from 'antd'
-import { useAtom } from 'jotai'
 import { Navigate, Outlet } from 'react-router-dom'
 import useStyle from './index.style'
+import RightSlider from './RightSlider'
 
 const { Sider, Content } = Layout
 function MainContent() {
   const { styles } = useStyle()
-
-  const [showRight, setShowRight] = useAtom(showRightSidebarAtom)
 
   const [collapsedLeft, { toggle: toggleCollapsedLeft }] = useBoolean(true)
 
@@ -29,15 +25,7 @@ function MainContent() {
         <Outlet />
       </Content>
 
-      <Sider collapsible reverseArrow trigger={null} collapsedWidth="0" collapsed={!showRight}>
-        <div className={styles.rightSlideBarCloser}>
-          <CloseOutlined
-            onClick={() => {
-              setShowRight(false)
-            }}
-          />
-        </div>
-      </Sider>
+      <RightSlider />
     </Layout>
   )
 }

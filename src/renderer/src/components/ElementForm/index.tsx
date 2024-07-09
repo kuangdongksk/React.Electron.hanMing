@@ -55,7 +55,7 @@ function ElementForm(props: Readonly<NoteFormProps>) {
           <>
             {fields.map(({ key, name }) => (
               <Row key={key}>
-                <Form.Item key={key} name={name} label="目标笔记">
+                <Form.Item name={name} label="目标笔记">
                   <Select
                     showSearch
                     options={noteOptions}
@@ -73,7 +73,7 @@ function ElementForm(props: Readonly<NoteFormProps>) {
                     }}
                   />
                 </Form.Item>
-                <Form.Item key={key} name={name} label="关系类型">
+                <Form.Item name={name} label="关系类型">
                   <Select showSearch />
                 </Form.Item>
                 <Col span={1}>
