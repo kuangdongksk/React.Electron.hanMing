@@ -5,7 +5,8 @@ const useStyles = createStyles<{}, any>(() => {
     app: {
       height: '100vh',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      overflow: 'hidden'
     },
     appNav: {
       zIndex: '11',
