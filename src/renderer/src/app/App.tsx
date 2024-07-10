@@ -9,26 +9,17 @@ import { DefaultDarkTheme, DefaultLightTheme } from '../constant/theme'
 import './App.less'
 import useStyles from './App.style'
 import MainContent from './components/MainContent'
+import Header from './components/Header'
 
-const { Header, Footer } = Layout
+const { Footer } = Layout
 
 function App(): JSX.Element {
   const { styles } = useStyles()
-  const location = useLocation()
 
-  const [now, setNow] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'))
   const [appearance, { toggle: toggleAppearance }] = useToggle<'light', 'dark'>('light', 'dark')
   const getTheme = (appearance: 'light' | 'dark') => {
     return appearance === 'light' ? DefaultLightTheme : DefaultDarkTheme
   }
-
-  /* 实时时间 */
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setNow(dayjs().format('YYYY-MM-DD HH:mm:ss'))
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
 
   return (
     <ThemeProvider appearance={appearance} theme={getTheme(appearance)}>
@@ -37,12 +28,7 @@ function App(): JSX.Element {
           <NavLink to="main">画布</NavLink>
         </nav>
 
-        <Header className={styles.appHeader}>
-          <div className={styles.appHeaderLeft}>{location.pathname.split('/')[1]}</div>
-          <Switch onClick={toggleAppearance} />
-          <div>{now}</div>
-        </Header>
-
+        <Header toggleAppearance={toggleAppearance} />
         <MainContent />
         <Footer className={styles.appFooter}>
           <div>

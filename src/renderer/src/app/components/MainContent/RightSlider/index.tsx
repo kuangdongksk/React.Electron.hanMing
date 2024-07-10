@@ -10,20 +10,17 @@ const { Sider } = Layout
 const { create, get: _get, update: _update } = window.api
 
 function RightSlider() {
-  const { styles } = useRightSliderStyle()
-
   const [showRight, setShowRight] = useAtom(showRightSidebarAtom)
+  const { styles } = useRightSliderStyle({ showRight, width: '320px' })
 
   return (
     <Sider
+      className={styles.rightSlider}
       collapsible
       reverseArrow
       trigger={null}
       collapsedWidth="0"
       collapsed={!showRight}
-      style={{
-        width: '100em'
-      }}
     >
       <div className={styles.rightSlideBarCloser}>
         <CloseOutlined
