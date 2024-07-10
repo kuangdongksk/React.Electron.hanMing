@@ -5,7 +5,7 @@ import { Flex, Typography } from 'antd'
 
 const { Text } = Typography
 
-export interface CircleNodeProps {
+export interface IPlainNodeProps {
   data: {
     data: {
       content: string
@@ -16,7 +16,7 @@ export interface CircleNodeProps {
   }
 }
 
-export default function CircleNode(props: Readonly<CircleNodeProps>) {
+function PlainNode(props: Readonly<IPlainNodeProps>) {
   const { data } = props
   const { styles } = useCircleNodeStyles()
   return (
@@ -27,3 +27,4 @@ export default function CircleNode(props: Readonly<CircleNodeProps>) {
     </Flex>
   )
 }
+export default PlainNode

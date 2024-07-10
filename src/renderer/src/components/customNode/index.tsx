@@ -16,7 +16,7 @@ const NodeMap = (props: INodeMapProps) => {
   const { data } = props
   const { type } = data
   const map = {
-    [ENodeType.Circle]: <PlainNode data={data} />,
+    [ENodeType.Plain]: <PlainNode data={data} />,
     [ENodeType.List]: <ListNode data={data} />
   }
 

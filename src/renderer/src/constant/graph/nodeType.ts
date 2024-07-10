@@ -1,4 +1,4 @@
 export enum ENodeType {
-  Circle = 'circle',
-  List = 'list'
+  Plain = '普通',
+  List = '列表'
 }

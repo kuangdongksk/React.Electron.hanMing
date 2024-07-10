@@ -1,25 +1,23 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
 import { I2DCoordinate } from '@renderer/interface/graph'
-import { dbClickPositionAtom } from '@renderer/stores/canvas'
+import { dbClickPositionAtom, newNoteAtom } from '@renderer/stores/canvas'
+import { formToNote } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
-import { enumToArray } from '@renderer/util/trans/enum'
-import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd'
+import { enumToArray, enumToOptions } from '@renderer/util/trans/enum'
+import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd'
 import { LabeledValue } from 'antd/es/select'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
-export interface NoteFormProps {
-  onSubmit: (values: any) => void
-}
+export interface NoteFormProps {}
 
-const { get } = window.api
+const { create, get, update: _update } = window.api
 
-function ElementForm(props: Readonly<NoteFormProps>) {
-  const { onSubmit } = props
-
+function ElementForm() {
   const [form] = Form.useForm()
 
   const [position] = useAtom<I2DCoordinate>(dbClickPositionAtom)
+  const [, setNewNote] = useAtom(newNoteAtom)
 
   const [noteOptions, setNoteOptions] = useState<LabeledValue[]>([])
 
@@ -34,7 +32,11 @@ function ElementForm(props: Readonly<NoteFormProps>) {
     <Form
       form={form}
       onFinish={(values) => {
-        onSubmit(values)
+        promiseWidthTip(create.createNote(formToNote(values)), {
+          onSuccess: (res) => {
+            setNewNote(res)
+          }
+        })
       }}
     >
       <Form.Item label="x" name="x">
@@ -49,12 +51,7 @@ function ElementForm(props: Readonly<NoteFormProps>) {
       </Form.Item>
 
       <Form.Item label="类型" name="type" rules={[{ required: true, message: '请选择类型' }]}>
-        <Select
-          options={enumToArray(ENodeType).map((item) => ({
-            label: item,
-            value: item
-          }))}
-        />
+        <Select options={enumToOptions(ENodeType)} />
       </Form.Item>
 
       <Form.List name="addRelation">

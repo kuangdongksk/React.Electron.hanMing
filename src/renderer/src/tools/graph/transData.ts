@@ -1,5 +1,6 @@
 import { EdgeData, NodeData } from '@antv/g6'
 import { note, relation } from '@prisma/client'
+import { ENodeType } from '@renderer/constant/graph/nodeType'
 import { nanoid } from 'nanoid'
 
 export function stringArrayToObj<T>(strArr: string[]): T {
@@ -17,7 +18,7 @@ export function noteToNode(note: note): NodeData {
   const attributes = JSON.parse(attributesStr)
   return {
     id: note.id,
-    type: attributes.type ?? 'circle',
+    type: attributes.type ?? ENodeType.Plain,
     data: {
       content,
       ...attributes

@@ -8,7 +8,7 @@ import {
   register
 } from '@antv/g6'
 import { ReactNode } from '@antv/g6-extension-react'
-import { dbClickPositionAtom } from '@renderer/stores/canvas'
+import { dbClickPositionAtom, newNoteAtom } from '@renderer/stores/canvas'
 import { showRightSidebarAtom } from '@renderer/stores/layout'
 import { noteToNode, relationToEdge } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
@@ -29,6 +29,7 @@ export default function Main() {
 
   const [_, setShowRightSideBar] = useAtom(showRightSidebarAtom)
   const [_dbClickPosition, setDbClickPosition] = useAtom(dbClickPositionAtom)
+  const [newNote, setNewNote] = useAtom(newNoteAtom)
 
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
@@ -115,6 +116,14 @@ export default function Main() {
     initGraph()
     fetchData()
   })
+
+  useEffect(() => {
+    if (newNote) {
+      graph.addNodeData([noteToNode(newNote)])
+      graph.render()
+      setNewNote(undefined)
+    }
+  }, [newNote])
 
   useUnmount(() => {
     // if (graph) {
