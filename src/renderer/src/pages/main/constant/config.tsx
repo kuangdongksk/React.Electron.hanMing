@@ -105,6 +105,7 @@ const comboStateStyles: { [key in TBooleanStateName]: {} } = {
 
 export default {
   container: '',
+  autoFit: 'center',
   autoResize: true,
   plugins: [
     {
@@ -116,7 +117,18 @@ export default {
     {
       key: 'tooltip',
       type: 'tooltip'
+    },
+    {
+      key: 'legend',
+      type: 'legend',
+      nodeField: 'type'
     }
+    // {
+    //   key: 'cameraSetting',
+    //   type: 'camera-setting',
+    //   aspect: 'auto',
+    //   cameraType: 'tracking'
+    // }
   ],
   node: {
     type: 'react',
@@ -138,9 +150,7 @@ export default {
   },
   zoomRange: [0.25, 4],
   behaviors: [
-    {
-      type: 'drag-canvas'
-    },
+    'drag-canvas',
     {
       type: 'drag-element'
     },

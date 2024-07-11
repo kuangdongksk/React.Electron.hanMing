@@ -1,20 +1,16 @@
-import { IEvent } from '@antv/g6'
+import { CanvasEvent, IEvent, NodeEvent } from '@antv/g6'
 
 export const onEvent: {
   eventName: string
   callback: (e: IEvent) => void
 }[] = [
-  //#region 通用事件
-  // {
-  //   事件名称: 'wheel',
-  //   回调函数: (e) => {
-  //     console.log('鼠标滚轮滚动了', e)
-  //   }
-  // },
-  //#endregion
+  {
+    eventName: CanvasEvent.DRAG_END,
+    callback: (e) => {}
+  },
   //#region 节点事件
   {
-    eventName: 'node:hover',
+    eventName: NodeEvent.POINTER_OVER,
     callback: (e) => {
       console.log('节点被悬浮了', e)
     }

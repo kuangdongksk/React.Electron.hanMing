@@ -21,6 +21,7 @@ export function noteToNode(note: note): NodeData {
     type: attributes.type ?? ENodeType.Plain,
     data: {
       content,
+      type: attributes.type ?? ENodeType.Plain,
       ...attributes
     },
     style: {
