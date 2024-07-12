@@ -56,7 +56,10 @@ const useStyles = createStyles<{}, any>(() => {
       flexGrow: 0,
       display: 'flex',
       div: {
-        '&:first-child': { flex: '1' }
+        '&:first-child': {
+          flex: '1',
+          display: 'flex'
+        }
       }
     },
 

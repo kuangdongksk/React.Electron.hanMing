@@ -1,5 +1,6 @@
 import { EdgeData, NodeData } from '@antv/g6'
 import { note, relation } from '@prisma/client'
+import { INoteFormValue } from '@renderer/components/ElementForm'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
 import { nanoid } from 'nanoid'
 
@@ -32,17 +33,20 @@ export function noteToNode(note: note): NodeData {
   }
 }
 
-export function formToNote(formValue: { content: string; x: number; y: number }): note {
+export function formToNote(formValue: INoteFormValue): note {
+  const { addRelation, content, type, x, y } = formValue
   const id = nanoid()
   return {
     id,
     noteId: id,
-    content: formValue.content,
+    content,
     style: JSON.stringify({
-      x: formValue.x,
-      y: formValue.y
+      x,
+      y
     }),
-    attributes: JSON.stringify({})
+    attributes: JSON.stringify({
+      type
+    })
   }
 }
 

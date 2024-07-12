@@ -9,7 +9,7 @@ export const enumToOptions = (enumObj: any): IOptions<string>[] => {
   for (const key in enumObj) {
     options.push({
       label: enumObj[key],
-      value: key
+      value: enumObj[key]
     })
   }
   return options

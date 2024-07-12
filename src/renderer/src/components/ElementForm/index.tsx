@@ -4,7 +4,7 @@ import { I2DCoordinate } from '@renderer/interface/graph'
 import { dbClickPositionAtom, newNoteAtom } from '@renderer/stores/canvas'
 import { formToNote } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
-import { enumToArray, enumToOptions } from '@renderer/util/trans/enum'
+import { enumToOptions } from '@renderer/util/trans/enum'
 import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd'
 import { LabeledValue } from 'antd/es/select'
 import { useAtom } from 'jotai'
@@ -12,6 +12,14 @@ import { useEffect, useState } from 'react'
 export interface NoteFormProps {}
 
 const { create, get, update: _update } = window.api
+
+export interface INoteFormValue {
+  addRelation: { target: string; type: string }[]
+  content: string
+  type: ENodeType
+  x: number
+  y: number
+}
 
 function ElementForm() {
   const [form] = Form.useForm()
@@ -29,7 +37,7 @@ function ElementForm() {
   }, [position])
 
   return (
-    <Form
+    <Form<INoteFormValue>
       form={form}
       onFinish={(values) => {
         promiseWidthTip(create.createNote(formToNote(values)), {

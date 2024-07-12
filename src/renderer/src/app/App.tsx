@@ -1,20 +1,20 @@
 import { useToggle } from 'ahooks'
-import { Layout, Switch } from 'antd'
+import { Layout, Typography } from 'antd'
 import { ThemeProvider } from 'antd-style'
-import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import Versions from '../components/Versions'
+import { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import { DefaultDarkTheme, DefaultLightTheme } from '../constant/theme'
 import './App.less'
 import useStyles from './App.style'
-import MainContent from './components/MainContent'
 import Header from './components/Header'
+import MainContent from './components/MainContent'
 
 const { Footer } = Layout
+const { Text } = Typography
 
 function App(): JSX.Element {
   const { styles } = useStyles()
+  const [versions] = useState(window.electron.process.versions)
 
   const [appearance, { toggle: toggleAppearance }] = useToggle<'light', 'dark'>('light', 'dark')
   const getTheme = (appearance: 'light' | 'dark') => {
@@ -32,8 +32,13 @@ function App(): JSX.Element {
         <MainContent />
         <Footer className={styles.appFooter}>
           <div>
-            <Versions></Versions>
+            <Text>Electron v{versions.electron}</Text>
+            &nbsp;&nbsp;
+            <Text>Chromium v{versions.chrome}</Text>
+            &nbsp;&nbsp;
+            <Text>Node v{versions.node}</Text>
           </div>
+
           <div>右边</div>
         </Footer>
       </Layout>

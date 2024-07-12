@@ -1,9 +1,11 @@
+import { Flex } from 'antd'
+
 export default function ListNode({ data }) {
   console.log(data)
   return (
-    <div>
-      <span>${data.order}</span>
+    <Flex>
+      <span>${data.content}</span>
       <span>${data.id}</span>
-    </div>
+    </Flex>
   )
 }
