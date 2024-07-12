@@ -105,7 +105,6 @@ const comboStateStyles: { [key in TBooleanStateName]: {} } = {
 
 export default {
   container: '',
-  autoFit: 'center',
   autoResize: true,
   plugins: [
     {
@@ -148,7 +147,7 @@ export default {
     style: defaultCombo,
     state: comboStateStyles
   },
-  zoomRange: [0.25, 4],
+  // zoomRange: [0.25, 4],
   behaviors: [
     'drag-canvas',
     {

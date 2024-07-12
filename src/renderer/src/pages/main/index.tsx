@@ -16,7 +16,7 @@ import { useBoolean, useMount, useSize, useUnmount } from 'ahooks'
 import { Spin } from 'antd'
 import { useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
-import 图配置 from './constant/config'
+import GraphConfig from './constant/config'
 import { onEvent } from './constant/event'
 import useMainStyles from './index.style'
 
@@ -82,8 +82,7 @@ export default function Main() {
   const initGraph = () => {
     if (!graph) {
       graph = new Graph({
-        ...图配置,
-        height: 100,
+        ...GraphConfig,
         container: graphRef.current!
       })
 
@@ -104,7 +103,10 @@ export default function Main() {
         nodes,
         edges
       })
-      graph.render()
+      graph.render().then(() => {
+        const camera = document.querySelector('#g-canvas-camera')
+        camera?.setAttribute('style', 'overflow: visible;')
+      })
       setLoadEnd()
     })
   }

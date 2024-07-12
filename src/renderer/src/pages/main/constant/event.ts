@@ -11,9 +11,7 @@ export const onEvent: {
   //#region 节点事件
   {
     eventName: NodeEvent.POINTER_OVER,
-    callback: (e) => {
-      console.log('节点被悬浮了', e)
-    }
+    callback: (e) => {}
   },
   // {
   //   eventName: 'node:dblclick',
