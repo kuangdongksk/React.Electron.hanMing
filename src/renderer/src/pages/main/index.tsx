@@ -19,6 +19,8 @@ import { useEffect, useRef } from 'react'
 import GraphConfig from './constant/config'
 import { onEvent } from './constant/event'
 import useMainStyles from './index.style'
+import { ENodeType } from '@renderer/constant/graph/nodeType'
+import { nanoid } from 'nanoid'
 
 const { get, update } = window.api
 
@@ -38,14 +40,35 @@ export default function Main() {
 
   //#region 事件
   const handleCanvasDblClick = (e: IPointerEvent) => {
-    console.log(e)
-    const position = {
-      x: Math.floor(e.canvas.x),
-      y: Math.floor(e.canvas.y)
-    }
-    setDbClickPosition(position)
+    let { x, y } = e.canvas
+    x = Math.floor(x)
+    y = Math.floor(y)
 
+    const id = nanoid()
+    const position = { x, y }
+
+    setDbClickPosition(position)
     setShowRightSideBar(true)
+    graph.addNodeData([
+      {
+        id,
+        type: ENodeType.Plain,
+        x,
+        y,
+        data: {
+          content: '新建节点',
+          type: ENodeType.Plain
+        }
+      }
+    ])
+    setNewNote({
+      id,
+      noteId: id,
+      content: '新建节点',
+      style: JSON.stringify({ x, y }),
+      attributes: JSON.stringify({ type: ENodeType.Plain })
+    })
+    graph.render()
   }
 
   //#region node事件
@@ -91,9 +114,7 @@ export default function Main() {
       bindEvents()
     }
   }
-  //#endregion
 
-  //#region 拉取数据
   const fetchData = () => {
     setLoading()
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
@@ -112,18 +133,14 @@ export default function Main() {
   }
   //#endregion
 
-  //#endregion
-
   useMount(() => {
     initGraph()
     fetchData()
   })
 
   useEffect(() => {
-    if (newNote) {
-      graph.addNodeData([noteToNode(newNote)])
-      graph.render()
-      setNewNote(undefined)
+    if (newNote?.id) {
+      // graph.updateNodeData([noteToNode(newNote)])
     }
   }, [newNote])
 

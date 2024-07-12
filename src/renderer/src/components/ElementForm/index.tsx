@@ -2,7 +2,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import { dbClickPositionAtom, newNoteAtom } from '@renderer/stores/canvas'
-import { formToNote } from '@renderer/tools/graph/transData'
+import { formToNote, noteToNode } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
 import { enumToOptions } from '@renderer/util/trans/enum'
 import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd'
@@ -16,6 +16,7 @@ const { create, get, update: _update } = window.api
 export interface INoteFormValue {
   addRelation: { target: string; type: string }[]
   content: string
+  id: string
   type: ENodeType
   x: number
   y: number
@@ -25,7 +26,7 @@ function ElementForm() {
   const [form] = Form.useForm()
 
   const [position] = useAtom<I2DCoordinate>(dbClickPositionAtom)
-  const [, setNewNote] = useAtom(newNoteAtom)
+  const [newNote, setNewNote] = useAtom(newNoteAtom)
 
   const [noteOptions, setNoteOptions] = useState<LabeledValue[]>([])
 
@@ -35,6 +36,18 @@ function ElementForm() {
       y: position.y
     })
   }, [position])
+
+  useEffect(() => {
+    if (newNote) {
+      const note = noteToNode(newNote)
+
+      form.setFieldsValue({
+        id: note.id,
+        content: note.data?.content,
+        type: note.type
+      })
+    }
+  }, [newNote])
 
   return (
     <Form<INoteFormValue>
@@ -46,7 +59,14 @@ function ElementForm() {
           }
         })
       }}
+      onValuesChange={(_changedValues, allValues) => {
+        setNewNote(formToNote(allValues))
+      }}
     >
+      <Form.Item label="id" name="id">
+        <Input disabled />
+      </Form.Item>
+
       <Form.Item label="x" name="x">
         <InputNumber disabled />
       </Form.Item>
