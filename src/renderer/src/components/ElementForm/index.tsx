@@ -1,11 +1,12 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { is } from '@electron-toolkit/utils'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import { dbClickPositionAtom, newNoteAtom } from '@renderer/stores/canvas'
 import { formToNote, noteToNode } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
 import { enumToOptions } from '@renderer/util/trans/enum'
-import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd'
+import { Button, Col, Form, Input, InputNumber, Radio, Row, Select, Switch } from 'antd'
 import { LabeledValue } from 'antd/es/select'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
@@ -15,8 +16,10 @@ const { create, get, update: _update } = window.api
 
 export interface INoteFormValue {
   addRelation: { target: string; type: string }[]
+  comboId: string
   content: string
   id: string
+  isCombo: string
   type: ENodeType
   x: number
   y: number
@@ -43,6 +46,8 @@ function ElementForm() {
 
       form.setFieldsValue({
         id: note.id,
+        isCombo: note.isCombo ? 'true' : 'false',
+        comboId: note.combo,
         content: note.data?.content,
         type: note.type
       })
@@ -72,6 +77,24 @@ function ElementForm() {
       </Form.Item>
       <Form.Item label="y" name="y">
         <InputNumber disabled />
+      </Form.Item>
+
+      <Form.Item label="是否组合" name="isCombo">
+        <Radio.Group>
+          <Radio.Button value={'false'}>否</Radio.Button>
+          <Radio.Button value={'true'}>是</Radio.Button>
+        </Radio.Group>
+      </Form.Item>
+
+      <Form.Item label="父组合" name="comboId">
+        <Select
+          options={[
+            {
+              label: '无',
+              value: 'undefined'
+            }
+          ]}
+        />
       </Form.Item>
 
       <Form.Item label="内容" name="content" rules={[{ required: true, message: '请输入内容' }]}>

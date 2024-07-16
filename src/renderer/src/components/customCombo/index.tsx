@@ -1,14 +1,11 @@
-import { Point } from '@antv/g6'
-import { ReactNode } from '@antv/g6-extension-react'
-
-export default class ReactCombo extends ReactNode {
-  render() {
-    console.log(super.getAttributeNames())
-    super.render()
+import { BaseCombo, BaseComboStyleProps, Rect } from '@antv/g6'
+export default class CustomCombo extends BaseCombo {
+  protected getKeyStyle(attributes: Required<BaseComboStyleProps>) {
+    const [width, height] = this.getKeySize(attributes)
+    return { ...super.getKeyStyle(attributes), anchor: [0.5, 0.5], width, height }
   }
 
-  getComboPosition(attributes: Record<string, unknown>): Point {
-    console.log(attributes)
-    return [0, 0]
+  protected drawKeyShape(attributes: Required<BaseComboStyleProps>, container: Group) {
+    return this.upsert('key', Rect, this.getKeyStyle(attributes), container)
   }
 }

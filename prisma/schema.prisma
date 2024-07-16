@@ -17,10 +17,12 @@ model mapTagNote {
 
 model note {
   id                               String       @id
+  attributes                       String       @default("{}")
+  content                          String       @default("空")
+  isCombo                          String       @default("false")
+  comboId                          String       @default("undefind")
   noteId                           String       @default("no data")
   style                            String       @default("{}")
-  content                          String       @default("空")
-  attributes                       String       @default("{}")
   mapTagNote_mapTagNote_noteTonote mapTagNote[] @relation("mapTagNote_noteTonote")
   relation_relation_targetTonote   relation[]   @relation("relation_targetTonote")
   relation_relation_sourceTonote   relation[]   @relation("relation_sourceTonote")

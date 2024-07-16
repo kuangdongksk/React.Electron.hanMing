@@ -66,7 +66,9 @@ export default function Main() {
       ])
       setNewNote({
         id,
+        isCombo: 'false',
         noteId: id,
+        comboId: 'undefined',
         content: '新建节点',
         style: JSON.stringify({ x, y }),
         attributes: JSON.stringify({ type: ENodeType.Plain })
@@ -106,7 +108,7 @@ export default function Main() {
       })
 
       graph.setData({ nodes: [], edges: [], combos: [] })
-      graph.render()
+      graph.draw()
       bindEvents()
     }
   }
@@ -114,18 +116,14 @@ export default function Main() {
   const fetchData = () => {
     setLoading()
     Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
-      const nodes = res[0].map(noteToNode)
+      const nodes = res[0].map(noteToNode).filter((v) => v.isCombo === false)
       const edges = res[1].map(relationToEdge)
       graph.setData({
         nodes,
         edges,
-        combos: [
-          {
-            id: nanoid()
-          }
-        ]
+        combos: res[0].map(noteToNode).filter((v) => v.isCombo === true)
       })
-      graph.render().then(() => {
+      graph.draw().then(() => {
         const camera = document.querySelector('#g-canvas-camera')
         camera?.setAttribute('style', 'overflow: visible;')
       })
@@ -141,7 +139,7 @@ export default function Main() {
   useEffect(() => {
     if (newNote?.id) {
       graph.updateNodeData([noteToNode(newNote)])
-      graph.render()
+      graph.draw()
     }
   }, [newNote])
 

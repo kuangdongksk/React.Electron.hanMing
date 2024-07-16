@@ -29,7 +29,7 @@ function RightSlider() {
             Modal.confirm({
               okText: '保存',
               onOk: () => {
-                promiseWidthTip(c)
+                // promiseWidthTip()
                 setNewNote(undefined)
                 setShowRight(false)
               }

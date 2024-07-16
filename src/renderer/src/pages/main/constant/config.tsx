@@ -145,7 +145,7 @@ export default {
   },
   combo: {
     type: 'react',
-    style: defaultCombo,
+    style: { ...defaultCombo, component: (data: any) => <NoteMap data={data} /> },
     state: comboStateStyles
   },
   // zoomRange: [0.25, 4],
