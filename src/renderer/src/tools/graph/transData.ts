@@ -1,4 +1,4 @@
-import { EdgeData, NodeData } from '@antv/g6'
+import { ComboData, EdgeData, NodeData } from '@antv/g6'
 import { note, relation } from '@prisma/client'
 import { INoteFormValue } from '@renderer/components/ElementForm'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
@@ -12,21 +12,18 @@ export function stringArrayToObj<T>(strArr: string[]): T {
 }
 
 //#region note
-export function noteToNode(note: note): NodeData & {
-  isCombo: boolean
-} {
-  const { attributes: attributesStr, comboId, content, isCombo, style } = note
+export function noteToNode(note: note): NodeData {
+  const { attributes: attributesStr, comboId, content, id, style } = note
 
   const attributes = JSON.parse(attributesStr)
   return {
-    id: note.id,
+    id,
     combo: comboId === 'undefined' ? undefined : comboId,
     data: {
       content,
       type: attributes.type ?? ENodeType.Plain,
       ...attributes
     },
-    isCombo: isCombo !== 'false',
     style: {
       label: true,
       labelText: (d) => d.data?.label,
@@ -67,3 +64,14 @@ export function relationToEdge(relation: relation): EdgeData {
     target: relation.target
   }
 }
+//#endregion
+
+//#region 组合
+export function noteToCombo(note: note): ComboData {
+  const { id, comboId } = note
+  return {
+    id,
+    comboId
+  }
+}
+//#endregion

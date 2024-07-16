@@ -12,7 +12,7 @@ import ReactCombo from '@renderer/components/customCombo'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
 import { dbClickPositionAtom, newNoteAtom } from '@renderer/stores/canvas'
 import { showRightSidebarAtom } from '@renderer/stores/layout'
-import { noteToNode, relationToEdge } from '@renderer/tools/graph/transData'
+import { noteToCombo, noteToNode, relationToEdge } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
 import { useBoolean, useMount, useSize, useUnmount } from 'ahooks'
 import { Spin } from 'antd'
@@ -121,14 +121,12 @@ export default function Main() {
       get.getAllRelation(),
       get.findManyNoteWhere(获取所有Combo)
     ]).then((res) => {
-      const nodes = res[0].map(noteToNode).filter((v) => v.isCombo === false)
+      const nodes = res[0].map(noteToNode)
       const edges = res[1].map(relationToEdge)
-      const combos = res[2].map(noteToNode)
-      graph.setData({
-        nodes,
-        edges,
-        combos
-      })
+      const combos = res[2].map(noteToCombo)
+
+      graph.setData({ nodes, edges, combos })
+
       graph.draw().then(() => {
         const camera = document.querySelector('#g-canvas-camera')
         camera?.setAttribute('style', 'overflow: visible;')

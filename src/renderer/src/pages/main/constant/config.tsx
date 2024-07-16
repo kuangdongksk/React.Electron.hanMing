@@ -144,9 +144,9 @@ export default {
     state: edgeStateStyles
   },
   combo: {
-    type: 'circle',
-    style: { ...defaultCombo, component: (data: any) => <NoteMap data={data} /> },
-    state: comboStateStyles
+    type: 'circle'
+    // style: { ...defaultCombo, component: (data: any) => <NoteMap data={data} /> },
+    // state: comboStateStyles
   },
   // zoomRange: [0.25, 4],
   behaviors: [
