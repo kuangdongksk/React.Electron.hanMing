@@ -144,7 +144,7 @@ export default {
     state: edgeStateStyles
   },
   combo: {
-    type: 'react',
+    type: 'circle',
     style: { ...defaultCombo, component: (data: any) => <NoteMap data={data} /> },
     state: comboStateStyles
   },

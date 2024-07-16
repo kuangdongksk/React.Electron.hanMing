@@ -5,9 +5,9 @@ export interface IApi {
     createNote: (data: note) => Promise<note>
   }
   get: {
+    findManyNoteWhere: (where?: any) => Promise<note[]>
     getAllNote: () => Promise<note[]>
     getNoteById: (id: string) => Promise<note | null>
-    getNotesContentIncludeParam: (content: string) => Promise<note[]>
     getAllRelation: () => Promise<relation[]>
     getAllRelationType: () => Promise<relationType[]>
   }

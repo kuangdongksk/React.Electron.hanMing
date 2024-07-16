@@ -4,11 +4,11 @@ import { contextBridge } from 'electron'
 import { IApi } from '../renderer/src/interface/api'
 import { createNote } from './service/create'
 import {
+  findManyNoteWhere,
   getAllNote,
   getAllRelation,
   getAllRelationType,
-  getNoteById,
-  getNotesContentIncludeParam
+  getNoteById
 } from './service/get'
 import { updateNoteById } from './service/update'
 
@@ -21,16 +21,17 @@ const api: IApi = {
     }
   },
   get: {
+    findManyNoteWhere: async (where?: any) => {
+      const res = await findManyNoteWhere(where)
+      return res
+    },
+
     getAllNote: async () => {
       const res = await getAllNote()
       return res
     },
     getNoteById: async (id: string) => {
       const res = await getNoteById(id)
-      return res
-    },
-    getNotesContentIncludeParam: async (content: string) => {
-      const res = await getNotesContentIncludeParam(content)
       return res
     },
 

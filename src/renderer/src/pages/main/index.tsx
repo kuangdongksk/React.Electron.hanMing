@@ -22,6 +22,7 @@ import { useEffect, useRef } from 'react'
 import GraphConfig from './constant/config'
 import { onEvent } from './constant/event'
 import useMainStyles from './index.style'
+import { 获取所有Combo, 获取所有非Combo } from '@renderer/constant/request/note'
 
 const { get, update } = window.api
 
@@ -29,7 +30,7 @@ let graph: Graph
 export default function Main() {
   register(ExtensionCategory.NODE, 'react', ReactNode)
   register(ExtensionCategory.EDGE, 'react', ReactNode)
-  register<ExtensionCategory.COMBO>(ExtensionCategory.COMBO, 'react', ReactCombo)
+  // register<ExtensionCategory.COMBO>(ExtensionCategory.COMBO, 'react', ReactCombo)
   const { styles } = useMainStyles()
 
   const [_, setShowRightSideBar] = useAtom(showRightSidebarAtom)
@@ -115,13 +116,18 @@ export default function Main() {
 
   const fetchData = () => {
     setLoading()
-    Promise.all([get.getAllNote(), get.getAllRelation()]).then((res) => {
+    Promise.all([
+      get.findManyNoteWhere(获取所有非Combo),
+      get.getAllRelation(),
+      get.findManyNoteWhere(获取所有Combo)
+    ]).then((res) => {
       const nodes = res[0].map(noteToNode).filter((v) => v.isCombo === false)
       const edges = res[1].map(relationToEdge)
+      const combos = res[2].map(noteToNode)
       graph.setData({
         nodes,
         edges,
-        combos: res[0].map(noteToNode).filter((v) => v.isCombo === true)
+        combos
       })
       graph.draw().then(() => {
         const camera = document.querySelector('#g-canvas-camera')

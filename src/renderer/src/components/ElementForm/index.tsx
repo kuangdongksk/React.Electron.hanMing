@@ -1,12 +1,12 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { is } from '@electron-toolkit/utils'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
+import { 根据内容获取, 获取所有Combo } from '@renderer/constant/request/note'
 import { I2DCoordinate } from '@renderer/interface/graph'
 import { dbClickPositionAtom, newNoteAtom } from '@renderer/stores/canvas'
 import { formToNote, noteToNode } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
 import { enumToOptions } from '@renderer/util/trans/enum'
-import { Button, Col, Form, Input, InputNumber, Radio, Row, Select, Switch } from 'antd'
+import { Button, Col, Form, Input, InputNumber, Radio, Row, Select } from 'antd'
 import { LabeledValue } from 'antd/es/select'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
@@ -25,6 +25,13 @@ export interface INoteFormValue {
   y: number
 }
 
+const DefaultComboOptions = [
+  {
+    label: '无',
+    value: 'undefined'
+  }
+]
+
 function ElementForm() {
   const [form] = Form.useForm()
 
@@ -32,6 +39,22 @@ function ElementForm() {
   const [newNote, setNewNote] = useAtom(newNoteAtom)
 
   const [noteOptions, setNoteOptions] = useState<LabeledValue[]>([])
+  const [comboOptions, setComboOptions] = useState<LabeledValue[]>(DefaultComboOptions)
+
+  useEffect(() => {
+    promiseWidthTip(get.findManyNoteWhere(获取所有Combo), {
+      onSuccess: (res) => {
+        setComboOptions(
+          res
+            .map((item) => ({
+              label: item.content,
+              value: item.id
+            }))
+            .concat(DefaultComboOptions)
+        )
+      }
+    })
+  }, [])
 
   useEffect(() => {
     form.setFieldsValue({
@@ -42,14 +65,13 @@ function ElementForm() {
 
   useEffect(() => {
     if (newNote) {
-      const note = noteToNode(newNote)
+      const { id, isCombo, comboId, content } = newNote
 
       form.setFieldsValue({
-        id: note.id,
-        isCombo: note.isCombo ? 'true' : 'false',
-        comboId: note.combo,
-        content: note.data?.content,
-        type: note.type
+        id,
+        isCombo,
+        comboId,
+        content
       })
     }
   }, [newNote])
@@ -87,14 +109,7 @@ function ElementForm() {
       </Form.Item>
 
       <Form.Item label="父组合" name="comboId">
-        <Select
-          options={[
-            {
-              label: '无',
-              value: 'undefined'
-            }
-          ]}
-        />
+        <Select options={comboOptions} />
       </Form.Item>
 
       <Form.Item label="内容" name="content" rules={[{ required: true, message: '请输入内容' }]}>
@@ -115,7 +130,7 @@ function ElementForm() {
                     showSearch
                     options={noteOptions}
                     onSearch={(value) => {
-                      promiseWidthTip(get.getNotesContentIncludeParam(value), {
+                      promiseWidthTip(get.findManyNoteWhere(根据内容获取(value)), {
                         onSuccess: (res) => {
                           setNoteOptions(
                             res.map((item) => ({
