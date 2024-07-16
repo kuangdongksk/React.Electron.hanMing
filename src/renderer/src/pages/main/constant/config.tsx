@@ -140,10 +140,11 @@ export default {
     state: nodeStateStyles
   },
   edge: {
-    style: defaultEdge,
+    style: { ...defaultEdge },
     state: edgeStateStyles
   },
   combo: {
+    type: 'react',
     style: defaultCombo,
     state: comboStateStyles
   },

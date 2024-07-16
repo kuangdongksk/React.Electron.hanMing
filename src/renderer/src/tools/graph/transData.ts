@@ -34,8 +34,8 @@ export function noteToNode(note: note): NodeData {
 }
 
 export function formToNote(formValue: INoteFormValue): note {
-  const { addRelation, content, type, x, y } = formValue
-  const id = nanoid()
+  const { addRelation, content, id, type, x, y } = formValue
+
   return {
     id,
     noteId: id,
