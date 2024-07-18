@@ -1,4 +1,4 @@
-import { CanvasEvent, IEvent, NodeEvent } from '@antv/g6'
+import { CanvasEvent, EdgeEvent, IEvent, NodeEvent } from '@antv/g6'
 
 export const onEvent: {
   eventName: string
@@ -13,17 +13,16 @@ export const onEvent: {
     eventName: NodeEvent.POINTER_OVER,
     callback: (e) => {}
   },
-  // {
-  //   eventName: 'node:dblclick',
-  //   callback: (e) => {
-  //     e.preventDefault()
-  //     e.stopPropagation()
-  //   }
-  // },
+  {
+    eventName: NodeEvent.CLICK,
+    callback: (e) => {
+      console.log('节点被点击了', e)
+    }
+  },
   //#endregion
   //#region 边事件
   {
-    eventName: 'edge:click',
+    eventName: EdgeEvent.CLICK,
     callback: (e) => {
       console.log('边被点击了', e)
     }

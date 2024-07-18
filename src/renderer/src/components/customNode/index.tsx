@@ -5,10 +5,10 @@ import ListNode from './ListNode'
 
 export interface INodeMapProps {
   data: {
-    data: any
     id: string
     style: NodeStyle
     type: ENodeType
+    content: string
   }
 }
 

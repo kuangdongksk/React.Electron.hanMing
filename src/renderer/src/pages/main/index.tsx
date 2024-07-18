@@ -8,13 +8,14 @@ import {
   register
 } from '@antv/g6'
 import { ReactNode } from '@antv/g6-extension-react'
-import ReactCombo from '@renderer/components/customCombo'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
-import { dbClickPositionAtom, newNoteAtom } from '@renderer/stores/canvas'
-import { showRightSidebarAtom } from '@renderer/stores/layout'
+import { 获取所有Combo, 获取所有非Combo } from '@renderer/constant/request/note'
+import { dbClickPositionAtom } from '@renderer/stores/graph/canvas'
+import { newNodeAtom } from '@renderer/stores/graph/node'
+import { formTypeAtom, showRightSidebarAtom } from '@renderer/stores/layout'
 import { noteToCombo, noteToNode, relationToEdge } from '@renderer/tools/graph/transData'
 import { promiseWidthTip } from '@renderer/util/function/requeest'
-import { useBoolean, useMount, useSize, useUnmount } from 'ahooks'
+import { useBoolean, useMount, useSize } from 'ahooks'
 import { Spin } from 'antd'
 import { useAtom } from 'jotai'
 import { nanoid } from 'nanoid'
@@ -22,7 +23,6 @@ import { useEffect, useRef } from 'react'
 import GraphConfig from './constant/config'
 import { onEvent } from './constant/event'
 import useMainStyles from './index.style'
-import { 获取所有Combo, 获取所有非Combo } from '@renderer/constant/request/note'
 
 const { get, update } = window.api
 
@@ -35,7 +35,8 @@ export default function Main() {
 
   const [_, setShowRightSideBar] = useAtom(showRightSidebarAtom)
   const [_dbClickPosition, setDbClickPosition] = useAtom(dbClickPositionAtom)
-  const [newNote, setNewNote] = useAtom(newNoteAtom)
+  const [newNode, setNewNode] = useAtom(newNodeAtom)
+  const [_formType, setFormType] = useAtom(formTypeAtom)
 
   const graphRef = useRef<HTMLDivElement>(null)
   const size = useSize(graphRef)
@@ -49,37 +50,32 @@ export default function Main() {
 
     const id = nanoid()
     const position = { x, y }
+    const newNode = {
+      id,
+      type: ENodeType.Plain,
+      x,
+      y,
+      content: '新建节点'
+    }
 
     setDbClickPosition(position)
     setShowRightSideBar(true)
-    if (!newNote?.id) {
-      graph.addNodeData([
-        {
-          id,
-          type: ENodeType.Plain,
-          x,
-          y,
-          data: {
-            content: '新建节点',
-            type: ENodeType.Plain
-          }
-        }
-      ])
-      setNewNote({
-        id,
-        isCombo: 'false',
-        noteId: id,
-        comboId: 'undefined',
-        content: '新建节点',
-        style: JSON.stringify({ x, y }),
-        attributes: JSON.stringify({ type: ENodeType.Plain })
-      })
+    if (!newNode) {
+      graph.addNodeData([newNode])
+      setNewNode(newNode)
+      setFormType('node')
       graph.render()
     }
   }
 
+  useEffect(() => {
+    if (newNode) {
+      graph.updateNodeData([newNode])
+      graph.draw()
+    }
+  }, [newNode])
+
   const handleNodeDragend = (e: IElementEvent) => {
-    console.log(e)
     const node = e.target
     promiseWidthTip(
       update.updateNoteById(node.id, {
@@ -139,13 +135,6 @@ export default function Main() {
     initGraph()
     fetchData()
   })
-
-  useEffect(() => {
-    if (newNote?.id) {
-      graph.updateNodeData([noteToNode(newNote)])
-      graph.draw()
-    }
-  }, [newNote])
 
   useEffect(() => {
     if (size && graph) {

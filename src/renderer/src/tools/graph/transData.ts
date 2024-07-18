@@ -1,6 +1,6 @@
 import { ComboData, EdgeData, NodeData } from '@antv/g6'
 import { note, relation } from '@prisma/client'
-import { INoteFormValue } from '@renderer/components/ElementForm'
+import { INoteFormValue } from '@renderer/components/ElementForm/NodeForm'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
 
 export function stringArrayToObj<T>(strArr: string[]): T {
@@ -19,11 +19,8 @@ export function noteToNode(note: note): NodeData {
   return {
     id,
     combo: comboId === 'undefined' ? undefined : comboId,
-    data: {
-      content,
-      type: attributes.type ?? ENodeType.Plain,
-      ...attributes
-    },
+    content,
+    ...attributes,
     style: {
       label: true,
       labelText: (d) => d.data?.label,
@@ -34,14 +31,14 @@ export function noteToNode(note: note): NodeData {
 }
 
 export function formToNote(formValue: INoteFormValue): note {
-  const { addRelation, comboId, content, id, isCombo, type, x, y } = formValue
+  const { comboId, content, id, type, x, y } = formValue
 
   return {
     id,
     noteId: id,
     comboId,
     content,
-    isCombo,
+    isCombo: 'false',
     style: JSON.stringify({
       x,
       y

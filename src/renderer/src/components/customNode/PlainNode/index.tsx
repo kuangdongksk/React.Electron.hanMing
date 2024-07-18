@@ -1,15 +1,13 @@
 import { NodeStyle } from '@antv/g6/lib/spec/element/node'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
-import useCircleNodeStyles from './index.style'
 import { Flex, Typography } from 'antd'
+import CustomNodeRoot from '../components/CustomNodeRoot'
 
 const { Text } = Typography
 
 export interface IPlainNodeProps {
   data: {
-    data: {
-      content: string
-    }
+    content: string
     id: string
     style: NodeStyle
     type: ENodeType
@@ -18,13 +16,19 @@ export interface IPlainNodeProps {
 
 function PlainNode(props: Readonly<IPlainNodeProps>) {
   const { data } = props
-  const { styles } = useCircleNodeStyles()
   return (
-    <Flex vertical className={styles.root}>
-      <Flex align="center" justify="space-between">
-        <Text>{data.data.content}</Text>
+    <CustomNodeRoot>
+      <Flex
+        vertical
+        onClick={() => {
+          console.log('PlainNode', data)
+        }}
+      >
+        <Flex align="center" justify="space-between">
+          <Text>{data.content}</Text>
+        </Flex>
       </Flex>
-    </Flex>
+    </CustomNodeRoot>
   )
 }
 export default PlainNode
