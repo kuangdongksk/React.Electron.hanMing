@@ -120,7 +120,7 @@ export default {
     {
       key: 'legend',
       type: 'legend',
-      nodeField: 'type'
+      nodeField: (item) => item?.type
     }
     // {
     //   key: 'cameraSetting',
@@ -148,7 +148,7 @@ export default {
     // style: { ...defaultCombo, component: (data: any) => <NoteMap data={data} /> },
     // state: comboStateStyles
   },
-  // zoomRange: [0.25, 4],
+  zoomRange: [0.25, 4],
   behaviors: [
     'drag-canvas',
     {
