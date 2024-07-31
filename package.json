@@ -21,7 +21,7 @@
     "build:linux": "electron-vite build && electron-builder --linux"
   },
   "dependencies": {
-    "@antv/g6": "^5.0.4",
+    "@antv/g6": "5.0.10",
     "@antv/g6-extension-react": "^0.1.2",
     "@atlaskit/pragmatic-drag-and-drop": "^1.1.12",
     "@electron-toolkit/preload": "^3.0.0",
