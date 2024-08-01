@@ -2,7 +2,8 @@ import { GraphOptions } from '@antv/g6'
 import { ComboStyle } from '@antv/g6/lib/spec/element/combo'
 import { EdgeStyle } from '@antv/g6/lib/spec/element/edge'
 import { NodeStyle } from '@antv/g6/lib/spec/element/node'
-import NoteMap from '@renderer/components/customNode/index'
+import GNoteMap from '@renderer/components/customNode/index'
+import NoteMap from '@renderer/components/customNodeRc/index'
 import { ERed, ETeal } from '@renderer/constant/color'
 import { TBooleanStateName } from '@renderer/types/graph/state'
 
@@ -130,12 +131,14 @@ export default {
     // }
   ],
   node: {
-    type: 'react',
+    // type: 'react',
+    type: 'gNode',
     style: {
       ...defaultNode,
       label: true,
       labelText: (d) => d.data?.label,
-      component: (data: any) => <NoteMap data={data} />
+      // component: (data: any) => <NoteMap data={data} />
+      component: (data: any) => <GNoteMap data={data} />
     },
     state: nodeStateStyles
   },

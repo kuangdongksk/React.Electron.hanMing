@@ -7,7 +7,7 @@ import {
   NodeEvent,
   register
 } from '@antv/g6'
-import { ReactNode } from '@antv/g6-extension-react'
+import { ReactNode, GNode } from '@antv/g6-extension-react'
 import { ENodeType } from '@renderer/constant/graph/nodeType'
 import { 获取所有Combo, 获取所有非Combo } from '@renderer/constant/request/note'
 import { dbClickPositionAtom } from '@renderer/stores/graph/canvas'
@@ -29,6 +29,7 @@ const { get, update } = window.api
 let graph: Graph
 export default function Main() {
   register(ExtensionCategory.NODE, 'react', ReactNode)
+  register(ExtensionCategory.NODE, 'gNode', GNode)
   register(ExtensionCategory.EDGE, 'react', ReactNode)
   // register<ExtensionCategory.COMBO>(ExtensionCategory.COMBO, 'react', ReactCombo)
   const { styles } = useMainStyles()

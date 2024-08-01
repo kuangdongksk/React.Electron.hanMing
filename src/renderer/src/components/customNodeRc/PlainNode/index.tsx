@@ -1,17 +1,11 @@
-import { NodeStyle } from '@antv/g6/lib/spec/element/node'
-import { ENodeType } from '@renderer/constant/graph/nodeType'
+import { INodeData } from '@renderer/interface/components/node'
 import { Flex, Typography } from 'antd'
 import CustomNodeRoot from '../components/CustomNodeRoot'
 
 const { Text } = Typography
 
 export interface IPlainNodeProps {
-  data: {
-    content: string
-    id: string
-    style: NodeStyle
-    type: ENodeType
-  }
+  data: INodeData
 }
 
 function PlainNode(props: Readonly<IPlainNodeProps>) {
