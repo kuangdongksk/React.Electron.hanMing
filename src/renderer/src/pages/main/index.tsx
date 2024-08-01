@@ -23,6 +23,7 @@ import { useEffect, useRef } from 'react'
 import GraphConfig from './constant/config'
 import { onEvent } from './constant/event'
 import useMainStyles from './index.style'
+import { themeAppearanceAtom } from '@renderer/stores/theme'
 
 const { get, update } = window.api
 
@@ -34,13 +35,28 @@ export default function Main() {
   // register<ExtensionCategory.COMBO>(ExtensionCategory.COMBO, 'react', ReactCombo)
   const { styles } = useMainStyles()
 
+  //#region 尺寸
+  const graphRef = useRef<HTMLDivElement>(null)
+  const size = useSize(graphRef)
+  useEffect(() => {
+    if (size && graph) {
+      graph?.setSize(size.width, size.height)
+    }
+  }, [size?.height, size?.width])
+  //#endregion
+
+  //#region 主题
+  const [themeAppearance] = useAtom(themeAppearanceAtom)
+
+  useEffect(() => {
+    graph?.render()
+  }, [themeAppearance])
+  //#endregion
+
   const [_, setShowRightSideBar] = useAtom(showRightSidebarAtom)
   const [_dbClickPosition, setDbClickPosition] = useAtom(dbClickPositionAtom)
   const [newNode, setNewNode] = useAtom(newNodeAtom)
   const [_formType, setFormType] = useAtom(formTypeAtom)
-
-  const graphRef = useRef<HTMLDivElement>(null)
-  const size = useSize(graphRef)
 
   const [isLoading, { setTrue: setLoading, setFalse: setLoadEnd }] = useBoolean(false)
 
@@ -136,12 +152,6 @@ export default function Main() {
     initGraph()
     fetchData()
   })
-
-  useEffect(() => {
-    if (size && graph) {
-      graph.setSize(size.width, size.height)
-    }
-  }, [size?.height, size?.width])
 
   return (
     <>

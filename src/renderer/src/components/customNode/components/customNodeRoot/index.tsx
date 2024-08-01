@@ -6,13 +6,13 @@ import { useAtom } from 'jotai'
 import { useMemo } from 'react'
 
 export interface ICustomNodeRootProps {
-  height: number
-  width: number
   children?: React.ReactNode
+  height?: number | 'fit-content' | 'auto'
+  width?: number | 'fit-content' | 'auto'
 }
 
 function CustomNodeRoot(props: ICustomNodeRootProps) {
-  const { height, width, children } = props
+  const { children, height = 30, width = 100 } = props
 
   const [themeMode] = useAtom(themeAppearanceAtom)
 
@@ -24,9 +24,14 @@ function CustomNodeRoot(props: ICustomNodeRootProps) {
 
   return (
     <Group>
-      <Rect height={height} width={width} stroke={token?.colorPrimary} radius={token?.borderRadius}>
-        {children}
-      </Rect>
+      <Rect
+        children={children}
+        display="flex"
+        height={height}
+        width={width}
+        stroke={token?.colorPrimary}
+        radius={token?.borderRadius}
+      />
     </Group>
   )
 }
